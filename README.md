@@ -25,6 +25,10 @@ spaceparts-data-pipeline/
 
 ## Arquitecturas Implementadas
 
+## Mapa de la arquitectura local:
+
+![Diagrama Airflow Orquestador](Anexos/Arquitectura_local.png)
+
 ### 1. Entorno Local - Containerizado (Docker)
 
 **Stack tecnológico:**
@@ -90,6 +94,10 @@ POSTGRES_PASSWORD=airflow
 
 ### 2. Microsoft Fabric - Cloud
 
+![Diagrama Airflow Orquestador](Anexos/ARQUITECTURA_CLOUD.png)
+
+
+
 ### **Estructura de proyecto**
 
 ![Diagrama Airflow Orquestador](Anexos/Estructura_fabric.jpeg)
@@ -126,6 +134,8 @@ POSTGRES_PASSWORD=airflow
 ## Arquitectura de Medallón
 
 Actualmente se cuenta con dos notebook por capa, el principal que es un proceso de full date y el segundo que no es utilizado de momento que es el proceso incremental data
+
+![Diagrama Airflow Orquestador](Anexos/ARQUITECTURA_MEDALLA.png)
 
 ejemplo:
 
