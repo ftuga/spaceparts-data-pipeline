@@ -2112,3 +2112,21 @@ ValueError: Context key parameter execution_date can't have a default other than
 [2025-09-20T22:27:40.292+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
 [2025-09-20T22:27:40.332+0000] {logging_mixin.py:190} INFO - [2025-09-20T22:27:40.330+0000] {dag.py:3239} INFO - Sync 1 DAGs
 [2025-09-20T22:27:40.390+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.862 seconds
+[2025-09-20T22:28:11.163+0000] {processor.py:186} INFO - Started process (PID=2188) to work on /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:28:11.165+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/spaceparts_etl_orchestrator.py for tasks to queue
+[2025-09-20T22:28:11.168+0000] {logging_mixin.py:190} INFO - [2025-09-20T22:28:11.168+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:28:11.831+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:28:11.866+0000] {logging_mixin.py:190} INFO - [2025-09-20T22:28:11.865+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-09-20T22:28:11.919+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.769 seconds
+[2025-09-20T22:28:42.140+0000] {processor.py:186} INFO - Started process (PID=2196) to work on /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:28:42.142+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/spaceparts_etl_orchestrator.py for tasks to queue
+[2025-09-20T22:28:42.145+0000] {logging_mixin.py:190} INFO - [2025-09-20T22:28:42.145+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:28:42.804+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:28:42.856+0000] {logging_mixin.py:190} INFO - [2025-09-20T22:28:42.855+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-09-20T22:28:42.911+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.780 seconds
+[2025-09-20T22:29:13.543+0000] {processor.py:186} INFO - Started process (PID=2204) to work on /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:29:13.545+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/spaceparts_etl_orchestrator.py for tasks to queue
+[2025-09-20T22:29:13.551+0000] {logging_mixin.py:190} INFO - [2025-09-20T22:29:13.550+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:29:14.113+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T22:29:14.146+0000] {logging_mixin.py:190} INFO - [2025-09-20T22:29:14.146+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-09-20T22:29:14.205+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.677 seconds
