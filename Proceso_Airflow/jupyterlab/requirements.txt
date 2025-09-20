@@ -1,0 +1,5 @@
+pyodbc>=5.2.0
+pymssql>=2.3.7
+pandas
+sqlalchemy
+python-dotenv
