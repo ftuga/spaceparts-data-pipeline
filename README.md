@@ -4,7 +4,7 @@
 
 Este proyecto implementa una solución ETL completa para el dataset SpaceParts utilizando dos enfoques: un **entorno local containerizado** con limitaciones de recursos y una **implementación escalable en Microsoft Fabric**. Se procesa un volumen de **38+ millones de registros** desde 14 tablas fuente hacia 5 tablas optimizadas utilizando arquitectura de medallón.
 
-Datos de insumo: SpaceParts Dataset – Tabular Editor: https://tabulareditor.com/blog/reintroducing-the-spaceparts-dataset
+Datos de insumo requeridos: SpaceParts Dataset – Tabular Editor: https://tabulareditor.com/blog/reintroducing-the-spaceparts-dataset
 
 ## Estructura del Proyecto
 
@@ -584,4 +584,4 @@ Este proyecto establece las bases para una **plataforma de datos empresarial** q
 - **Data governance** automatizado con catálogo de datos y lineage tracking
 - **Advanced analytics** con capacidades de IA generativa para insights automatizados
 
-La arquitectura actual, basada en el patrón medallón y orquestación robusta, proporciona la flexibilidad necesaria para estas expansiones futuras sin requerir refactorización significativa de los componentes core.
+La arquitectura actual, basada en el patrón medallón y orquestación robusta, proporciona la flexibilidad necesaria para estas expansiones futuras sin requerir refactorización significativa de los componentes core
