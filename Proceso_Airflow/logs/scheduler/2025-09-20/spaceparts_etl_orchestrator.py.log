@@ -762,3 +762,27 @@ ValueError: Context key parameter execution_date can't have a default other than
 [2025-09-20T20:30:17.216+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
 [2025-09-20T20:30:17.254+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:30:17.253+0000] {dag.py:3239} INFO - Sync 1 DAGs
 [2025-09-20T20:30:17.315+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.558 seconds
+[2025-09-20T20:30:47.545+0000] {processor.py:186} INFO - Started process (PID=473) to work on /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:30:47.546+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/spaceparts_etl_orchestrator.py for tasks to queue
+[2025-09-20T20:30:47.548+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:30:47.547+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:30:47.841+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:30:47.863+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:30:47.863+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-09-20T20:30:47.900+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.363 seconds
+[2025-09-20T20:31:20.663+0000] {processor.py:186} INFO - Started process (PID=481) to work on /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:31:20.665+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/spaceparts_etl_orchestrator.py for tasks to queue
+[2025-09-20T20:31:20.667+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:31:20.667+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:31:21.037+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:31:21.055+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:31:21.055+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-09-20T20:31:21.092+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.437 seconds
+[2025-09-20T20:31:51.252+0000] {processor.py:186} INFO - Started process (PID=489) to work on /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:31:51.254+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/spaceparts_etl_orchestrator.py for tasks to queue
+[2025-09-20T20:31:51.256+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:31:51.255+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:31:51.660+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:31:51.685+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:31:51.685+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-09-20T20:31:51.723+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.477 seconds
+[2025-09-20T20:32:21.975+0000] {processor.py:186} INFO - Started process (PID=497) to work on /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:32:21.978+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/spaceparts_etl_orchestrator.py for tasks to queue
+[2025-09-20T20:32:21.981+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:32:21.980+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:32:22.346+0000] {processor.py:925} INFO - DAG(s) 'spaceparts_etl_orchestrator' retrieved from /opt/airflow/dags/spaceparts_etl_orchestrator.py
+[2025-09-20T20:32:22.361+0000] {logging_mixin.py:190} INFO - [2025-09-20T20:32:22.360+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-09-20T20:32:22.384+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/spaceparts_etl_orchestrator.py took 0.414 seconds
