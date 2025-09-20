@@ -4,7 +4,7 @@
 
 Este proyecto implementa una solución ETL completa para el dataset SpaceParts utilizando dos enfoques: un **entorno local containerizado** con limitaciones de recursos y una **implementación escalable en Microsoft Fabric**. Se procesa un volumen de **38+ millones de registros** desde 14 tablas fuente hacia 5 tablas optimizadas utilizando arquitectura de medallón.
 
-Datos de insumo: SpaceParts Dataset – Tabular Editor: https://tabulareditor.com/blog/reintroducing-the-spaceparts-dataset
+Datos de insumo requeridos: SpaceParts Dataset – Tabular Editor: https://tabulareditor.com/blog/reintroducing-the-spaceparts-dataset
 
 ## Estructura del Proyecto
 
@@ -96,7 +96,7 @@ POSTGRES_PASSWORD=airflow
 
 ![Diagrama Airflow Orquestador](Anexos/ARQUITECTURA_CLOUD.png)
 
-
+ARQUITECTURA_CLOUD
 
 ### **Estructura de proyecto**
 
@@ -535,3 +535,53 @@ curl localhost:5050  # pgAdmin
 **Dataset:** SpaceParts (Tabular Editor)  
 **Volumen total:** 38.6M → 32.3M registros  
 **Registros preservados:** 6.2M en quarantine para análisis de calidad
+
+
+## Extensiones y Escalabilidad del Proyecto
+
+### Evolución del Entorno Local
+
+El ambiente de desarrollo local presenta múltiples oportunidades de extensión que podrían transformarlo en una plataforma de datos completa:
+
+**Servicios de Exposición de Datos:**
+- Implementación de **FastAPI** para crear endpoints REST que expongan las tablas procesadas
+- Desarrollo de servicios GraphQL para consultas flexibles y optimizadas
+- Integración con **Apache Kafka** para streaming de datos en tiempo real
+
+**Pipeline de Machine Learning:**
+- Incorporación de **MLflow** para el versionado de modelos, tracking de experimentos y gestión del ciclo de vida ML
+- Implementación de **CI/CD con GitHub Actions** para automatizar la evaluación de modelos, donde solo se acepten commits que mejoren métricas de rendimiento predefinidas
+- Desarrollo de modelos predictivos para forecasting de ventas, detección de anomalías en órdenes y optimización de inventario
+- Integración con **Apache Spark** para procesamiento distribuido de grandes volúmenes
+
+**Observabilidad y Monitoreo:**
+- Implementación de **Prometheus + Grafana** para métricas de pipeline y calidad de datos
+- Alertas proactivas mediante **PagerDuty** o **Slack** para fallos en el procesamiento
+- Dashboards de monitoreo de SLA y performance de cada capa del medallón
+
+### Expansión en Microsoft Fabric
+
+La implementación cloud ofrece capacidades avanzadas para automatización y experiencia de usuario:
+
+**Automatización Inteligente:**
+- **Power Automate** para distribución automática de reportes vía email con filtros personalizados
+- Workflows que detecten cambios significativos en KPIs y notifiquen stakeholders relevantes
+- Integración con **Microsoft Teams** para colaboración en tiempo real sobre insights de datos
+
+**Experiencia de Usuario Mejorada:**
+- Botones de **refresh on-demand** en Power BI para actualización instantánea de datasets críticos
+- Implementación de **Row-Level Security (RLS)** para segmentación de datos por roles organizacionales
+
+**Arquitectura de Datos Avanzada:**
+- Migración hacia **Delta Lake** para ACID transactions y time travel capabilities
+- Implementación de **Change Data Capture (CDC)** para cargas incrementales más eficientes
+- Desarrollo de **data mesh architecture** con dominios de datos descentralizados
+
+### Consideraciones Estratégicas
+
+Este proyecto establece las bases para una **plataforma de datos empresarial** que puede evolucionar hacia:
+- **Self-service analytics** con herramientas de preparación de datos para usuarios de negocio
+- **Data governance** automatizado con catálogo de datos y lineage tracking
+- **Advanced analytics** con capacidades de IA generativa para insights automatizados
+
+La arquitectura actual, basada en el patrón medallón y orquestación robusta, proporciona la flexibilidad necesaria para estas expansiones futuras sin requerir refactorización significativa de los componentes core
