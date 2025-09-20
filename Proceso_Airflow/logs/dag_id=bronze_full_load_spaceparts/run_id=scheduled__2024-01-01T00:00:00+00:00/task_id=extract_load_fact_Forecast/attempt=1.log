@@ -1,0 +1,404 @@
+[2025-09-20T17:46:55.049+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:46:55.147+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:46:55.215+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:46:55.216+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:46:55.285+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Forecast> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:46:55.349+0000] {standard_task_runner.py:72} INFO - Started process 194 to run task
+[2025-09-20T17:46:55.362+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Forecast', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '28', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmp_fsf3d8k']
+[2025-09-20T17:46:55.377+0000] {standard_task_runner.py:105} INFO - Job 28: Subtask extract_load_fact_Forecast
+[2025-09-20T17:46:58.469+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [running]> on host c1c330a5988a
+[2025-09-20T17:46:58.735+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Forecast' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:46:58.743+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:46:58.778+0000] {01_Bronce.py:321} INFO - Starting extraction for table: fact.Forecast
+[2025-09-20T17:47:01.939+0000] {01_Bronce.py:333} INFO - Table fact.Forecast has 5,197 rows
+[2025-09-20T17:47:01.940+0000] {01_Bronce.py:347} INFO - Extracting data from fact.Forecast
+[2025-09-20T17:47:05.462+0000] {01_Bronce.py:364} INFO - Loading 5197 rows to bronze_fact_forecast
+[2025-09-20T17:47:05.500+0000] {01_Bronce.py:297} ERROR - Error loading data to bronze_fact_forecast: (psycopg2.errors.SyntaxError) syntax error at or near "%"
+LINE 4:                 WHERE table_name = %s
+                                           ^
+
+[SQL: 
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = %%s
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T17:47:05.501+0000] {01_Bronce.py:382} ERROR - Error processing table fact.Forecast: (psycopg2.errors.SyntaxError) syntax error at or near "%"
+LINE 4:                 WHERE table_name = %s
+                                           ^
+
+[SQL: 
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = %%s
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T17:47:05.530+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.SyntaxError: syntax error at or near "%"
+LINE 4:                 WHERE table_name = %s
+                                           ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 365, in extract_and_load_table
+    records_loaded = loader.load_data(df, bronze_table_name, if_exists='replace')
+  File "/opt/airflow/dags/01_Bronce.py", line 282, in load_data
+    self.create_table_if_not_exists(table_name, df_clean)
+  File "/opt/airflow/dags/01_Bronce.py", line 224, in create_table_if_not_exists
+    result = conn.execute(text(table_exists_query), (table_name,))
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1385, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 334, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1577, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1953, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2134, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.SyntaxError) syntax error at or near "%"
+LINE 4:                 WHERE table_name = %s
+                                           ^
+
+[SQL: 
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = %%s
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T17:47:05.589+0000] {taskinstance.py:1226} INFO - Marking task as UP_FOR_RETRY. dag_id=bronze_full_load_spaceparts, task_id=extract_load_fact_Forecast, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T174655, end_date=20250920T174705
+[2025-09-20T17:47:05.664+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T17:47:05.665+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 28 for task extract_load_fact_Forecast ((psycopg2.errors.SyntaxError) syntax error at or near "%"
+LINE 4:                 WHERE table_name = %s
+                                           ^
+
+[SQL: 
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = %%s
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405); 194)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.SyntaxError: syntax error at or near "%"
+LINE 4:                 WHERE table_name = %s
+                                           ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 365, in extract_and_load_table
+    records_loaded = loader.load_data(df, bronze_table_name, if_exists='replace')
+  File "/opt/airflow/dags/01_Bronce.py", line 282, in load_data
+    self.create_table_if_not_exists(table_name, df_clean)
+  File "/opt/airflow/dags/01_Bronce.py", line 224, in create_table_if_not_exists
+    result = conn.execute(text(table_exists_query), (table_name,))
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1385, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 334, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1577, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1953, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2134, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.SyntaxError) syntax error at or near "%"
+LINE 4:                 WHERE table_name = %s
+                                           ^
+
+[SQL: 
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = %%s
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T17:47:05.710+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-09-20T17:47:06.252+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T17:47:06.260+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T18:02:24.403+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:02:24.432+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:02:24.446+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:02:24.447+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T18:02:24.465+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Forecast> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:02:24.471+0000] {standard_task_runner.py:72} INFO - Started process 147 to run task
+[2025-09-20T18:02:24.478+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Forecast', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '70', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmp8ut3y3be']
+[2025-09-20T18:02:24.482+0000] {standard_task_runner.py:105} INFO - Job 70: Subtask extract_load_fact_Forecast
+[2025-09-20T18:02:24.792+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [running]> on host dcfe59692ee1
+[2025-09-20T18:02:24.880+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Forecast' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:02:24.881+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:02:24.895+0000] {01_Bronce.py:326} INFO - Starting extraction for table: fact.Forecast
+[2025-09-20T18:02:28.113+0000] {01_Bronce.py:338} INFO - Table fact.Forecast has 5,197 rows
+[2025-09-20T18:02:28.114+0000] {01_Bronce.py:352} INFO - Extracting data from fact.Forecast
+[2025-09-20T18:02:31.443+0000] {01_Bronce.py:369} INFO - Loading 5197 rows to bronze_fact_forecast
+[2025-09-20T18:02:31.455+0000] {01_Bronce.py:269} ERROR - Error creating table bronze_fact_forecast: (psycopg2.errors.DuplicateColumn) column "load_date" specified more than once
+
+[SQL: 
+            CREATE TABLE bronze_fact_forecast (
+                forecast_month TIMESTAMP, region_territory TEXT, product_type TEXT, forecast_eur DOUBLE PRECISION, dwcreateddate TIMESTAMP, load_date TIMESTAMP, source_system TEXT, load_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, source_system VARCHAR(50) DEFAULT 'spaceparts'
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T18:02:31.455+0000] {01_Bronce.py:302} ERROR - Error loading data to bronze_fact_forecast: (psycopg2.errors.DuplicateColumn) column "load_date" specified more than once
+
+[SQL: 
+            CREATE TABLE bronze_fact_forecast (
+                forecast_month TIMESTAMP, region_territory TEXT, product_type TEXT, forecast_eur DOUBLE PRECISION, dwcreateddate TIMESTAMP, load_date TIMESTAMP, source_system TEXT, load_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, source_system VARCHAR(50) DEFAULT 'spaceparts'
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T18:02:31.455+0000] {01_Bronce.py:387} ERROR - Error processing table fact.Forecast: (psycopg2.errors.DuplicateColumn) column "load_date" specified more than once
+
+[SQL: 
+            CREATE TABLE bronze_fact_forecast (
+                forecast_month TIMESTAMP, region_territory TEXT, product_type TEXT, forecast_eur DOUBLE PRECISION, dwcreateddate TIMESTAMP, load_date TIMESTAMP, source_system TEXT, load_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, source_system VARCHAR(50) DEFAULT 'spaceparts'
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T18:02:31.470+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.DuplicateColumn: column "load_date" specified more than once
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 370, in extract_and_load_table
+    records_loaded = loader.load_data(df, bronze_table_name, if_exists='replace')
+  File "/opt/airflow/dags/01_Bronce.py", line 287, in load_data
+    self.create_table_if_not_exists(table_name, df_clean)
+  File "/opt/airflow/dags/01_Bronce.py", line 265, in create_table_if_not_exists
+    conn.execute(text(create_table_sql))
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1385, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 334, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1577, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1953, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2134, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.DuplicateColumn) column "load_date" specified more than once
+
+[SQL: 
+            CREATE TABLE bronze_fact_forecast (
+                forecast_month TIMESTAMP, region_territory TEXT, product_type TEXT, forecast_eur DOUBLE PRECISION, dwcreateddate TIMESTAMP, load_date TIMESTAMP, source_system TEXT, load_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, source_system VARCHAR(50) DEFAULT 'spaceparts'
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T18:02:31.489+0000] {taskinstance.py:1226} INFO - Marking task as UP_FOR_RETRY. dag_id=bronze_full_load_spaceparts, task_id=extract_load_fact_Forecast, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T180224, end_date=20250920T180231
+[2025-09-20T18:02:31.525+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T18:02:31.525+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 70 for task extract_load_fact_Forecast ((psycopg2.errors.DuplicateColumn) column "load_date" specified more than once
+
+[SQL: 
+            CREATE TABLE bronze_fact_forecast (
+                forecast_month TIMESTAMP, region_territory TEXT, product_type TEXT, forecast_eur DOUBLE PRECISION, dwcreateddate TIMESTAMP, load_date TIMESTAMP, source_system TEXT, load_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, source_system VARCHAR(50) DEFAULT 'spaceparts'
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405); 147)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.DuplicateColumn: column "load_date" specified more than once
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 370, in extract_and_load_table
+    records_loaded = loader.load_data(df, bronze_table_name, if_exists='replace')
+  File "/opt/airflow/dags/01_Bronce.py", line 287, in load_data
+    self.create_table_if_not_exists(table_name, df_clean)
+  File "/opt/airflow/dags/01_Bronce.py", line 265, in create_table_if_not_exists
+    conn.execute(text(create_table_sql))
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1385, in execute
+    return meth(self, multiparams, params, _EMPTY_EXECUTION_OPTS)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 334, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1577, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1953, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2134, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1910, in _execute_context
+    self.dialect.do_execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.DuplicateColumn) column "load_date" specified more than once
+
+[SQL: 
+            CREATE TABLE bronze_fact_forecast (
+                forecast_month TIMESTAMP, region_territory TEXT, product_type TEXT, forecast_eur DOUBLE PRECISION, dwcreateddate TIMESTAMP, load_date TIMESTAMP, source_system TEXT, load_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, source_system VARCHAR(50) DEFAULT 'spaceparts'
+            )
+        ]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+[2025-09-20T18:02:31.582+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-09-20T18:02:31.625+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T18:02:31.628+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T18:31:45.583+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:31:45.632+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:31:45.658+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:31:45.659+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T18:31:45.688+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Forecast> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:31:45.696+0000] {standard_task_runner.py:72} INFO - Started process 192 to run task
+[2025-09-20T18:31:45.717+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Forecast', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '118', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpjwm76j1e']
+[2025-09-20T18:31:45.723+0000] {standard_task_runner.py:105} INFO - Job 118: Subtask extract_load_fact_Forecast
+[2025-09-20T18:31:46.249+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Forecast scheduled__2024-01-01T00:00:00+00:00 [running]> on host 4c4d6e18e259
+[2025-09-20T18:31:46.435+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Forecast' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:31:46.438+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:31:46.472+0000] {01_Bronce.py:279} INFO - Starting extraction for table: fact.Forecast
+[2025-09-20T18:31:49.615+0000] {01_Bronce.py:291} INFO - Table fact.Forecast has 5,197 rows
+[2025-09-20T18:31:49.616+0000] {01_Bronce.py:305} INFO - Extracting data from fact.Forecast
+[2025-09-20T18:31:56.293+0000] {01_Bronce.py:322} INFO - Loading 5197 rows to bronze_fact_forecast
+[2025-09-20T18:31:57.234+0000] {01_Bronce.py:250} INFO - Loaded 5197 rows to bronze_fact_forecast
+[2025-09-20T18:31:57.235+0000] {01_Bronce.py:333} INFO - Successfully loaded 5,197 records to bronze_fact_forecast
+[2025-09-20T18:31:57.256+0000] {python.py:240} INFO - Done. Returned value was: {'source_table': 'fact.Forecast', 'bronze_table': 'bronze_fact_forecast', 'record_count': 5197, 'status': 'success', 'extraction_time': '2025-09-20T18:31:57.235214'}
+[2025-09-20T18:31:57.284+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T18:31:57.284+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts, task_id=extract_load_fact_Forecast, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T183145, end_date=20250920T183157
+[2025-09-20T18:31:57.343+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T18:31:57.410+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T18:31:57.414+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

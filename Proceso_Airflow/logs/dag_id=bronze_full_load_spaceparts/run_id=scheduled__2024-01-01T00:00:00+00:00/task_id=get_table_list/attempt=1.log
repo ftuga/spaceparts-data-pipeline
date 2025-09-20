@@ -1,0 +1,470 @@
+[2025-09-20T17:26:33.140+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:26:33.399+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:26:33.412+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:26:33.413+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:26:33.426+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:26:33.430+0000] {standard_task_runner.py:72} INFO - Started process 95 to run task
+[2025-09-20T17:26:33.435+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '3', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmp4tjz8y3p']
+[2025-09-20T17:26:33.439+0000] {standard_task_runner.py:105} INFO - Job 3: Subtask get_table_list
+[2025-09-20T17:26:33.511+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host 820af2429f51
+[2025-09-20T17:26:33.633+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:26:33.635+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:26:33.691+0000] {01_Bronce.py:316} ERROR - Error getting table list: Missing required environment variables: SPACEPARTS_SERVER, SPACEPARTS_DATABASE, SPACEPARTS_USERNAME, SPACEPARTS_PASSWORD
+[2025-09-20T17:26:33.692+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 306, in get_table_list
+    source_manager = SourceConnectionManager()
+  File "/opt/airflow/dags/01_Bronce.py", line 40, in __init__
+    raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
+ValueError: Missing required environment variables: SPACEPARTS_SERVER, SPACEPARTS_DATABASE, SPACEPARTS_USERNAME, SPACEPARTS_PASSWORD
+[2025-09-20T17:26:33.713+0000] {taskinstance.py:1226} INFO - Marking task as UP_FOR_RETRY. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T172633, end_date=20250920T172633
+[2025-09-20T17:26:33.793+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T17:26:33.794+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 3 for task get_table_list (Missing required environment variables: SPACEPARTS_SERVER, SPACEPARTS_DATABASE, SPACEPARTS_USERNAME, SPACEPARTS_PASSWORD; 95)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 306, in get_table_list
+    source_manager = SourceConnectionManager()
+  File "/opt/airflow/dags/01_Bronce.py", line 40, in __init__
+    raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
+ValueError: Missing required environment variables: SPACEPARTS_SERVER, SPACEPARTS_DATABASE, SPACEPARTS_USERNAME, SPACEPARTS_PASSWORD
+[2025-09-20T17:26:33.809+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-09-20T17:26:33.822+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T17:31:50.884+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:31:51.159+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:31:51.178+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:31:51.179+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:31:51.208+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:31:51.216+0000] {standard_task_runner.py:72} INFO - Started process 97 to run task
+[2025-09-20T17:31:51.222+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '6', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmp_kq5t9uu']
+[2025-09-20T17:31:51.226+0000] {standard_task_runner.py:105} INFO - Job 6: Subtask get_table_list
+[2025-09-20T17:31:51.293+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host b3797807fc8d
+[2025-09-20T17:31:51.410+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:31:51.412+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:31:51.450+0000] {01_Bronce.py:316} ERROR - Error getting table list: Missing required environment variables: SPACEPARTS_DATABASE
+[2025-09-20T17:31:51.450+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 306, in get_table_list
+    source_manager = SourceConnectionManager()
+  File "/opt/airflow/dags/01_Bronce.py", line 40, in __init__
+    raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
+ValueError: Missing required environment variables: SPACEPARTS_DATABASE
+[2025-09-20T17:31:51.468+0000] {taskinstance.py:1226} INFO - Marking task as UP_FOR_RETRY. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T173151, end_date=20250920T173151
+[2025-09-20T17:31:51.514+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T17:31:51.515+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 6 for task get_table_list (Missing required environment variables: SPACEPARTS_DATABASE; 97)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 306, in get_table_list
+    source_manager = SourceConnectionManager()
+  File "/opt/airflow/dags/01_Bronce.py", line 40, in __init__
+    raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
+ValueError: Missing required environment variables: SPACEPARTS_DATABASE
+[2025-09-20T17:31:51.557+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-09-20T17:31:51.601+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T17:31:51.609+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T17:38:52.151+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:38:52.177+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:38:52.187+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:38:52.187+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:38:52.196+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:38:52.199+0000] {standard_task_runner.py:72} INFO - Started process 103 to run task
+[2025-09-20T17:38:52.202+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '10', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmp78ho533o']
+[2025-09-20T17:38:52.203+0000] {standard_task_runner.py:105} INFO - Job 10: Subtask get_table_list
+[2025-09-20T17:38:52.476+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host fa866e4b5959
+[2025-09-20T17:38:52.646+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:38:52.648+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:38:53.853+0000] {01_Bronce.py:316} ERROR - Error getting table list: ('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)')
+[2025-09-20T17:38:53.856+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 309, in get_table_list
+    tables = profiler.list_tables()
+  File "/opt/airflow/dags/01_Bronce.py", line 157, in list_tables
+    with self.source_manager.get_connection() as conn:
+  File "/opt/airflow/dags/01_Bronce.py", line 56, in get_connection
+    return pyodbc.connect(self.get_connection_string())
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)')
+[2025-09-20T17:38:53.880+0000] {taskinstance.py:1226} INFO - Marking task as UP_FOR_RETRY. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T173852, end_date=20250920T173853
+[2025-09-20T17:38:53.934+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T17:38:53.934+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 10 for task get_table_list (('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)'); 103)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 309, in get_table_list
+    tables = profiler.list_tables()
+  File "/opt/airflow/dags/01_Bronce.py", line 157, in list_tables
+    with self.source_manager.get_connection() as conn:
+  File "/opt/airflow/dags/01_Bronce.py", line 56, in get_connection
+    return pyodbc.connect(self.get_connection_string())
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)')
+[2025-09-20T17:38:53.981+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-09-20T17:38:54.117+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T17:38:54.121+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T17:41:29.175+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:41:29.212+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:41:29.233+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:41:29.234+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:41:29.263+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:41:29.267+0000] {standard_task_runner.py:72} INFO - Started process 138 to run task
+[2025-09-20T17:41:29.276+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '11', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmppvprotzh']
+[2025-09-20T17:41:29.280+0000] {standard_task_runner.py:105} INFO - Job 11: Subtask get_table_list
+[2025-09-20T17:41:29.630+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host fa866e4b5959
+[2025-09-20T17:41:29.693+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:41:29.694+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:41:30.754+0000] {01_Bronce.py:316} ERROR - Error getting table list: ('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)')
+[2025-09-20T17:41:30.754+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 309, in get_table_list
+    tables = profiler.list_tables()
+  File "/opt/airflow/dags/01_Bronce.py", line 157, in list_tables
+    with self.source_manager.get_connection() as conn:
+  File "/opt/airflow/dags/01_Bronce.py", line 56, in get_connection
+    return pyodbc.connect(self.get_connection_string())
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)')
+[2025-09-20T17:41:30.761+0000] {taskinstance.py:1226} INFO - Marking task as UP_FOR_RETRY. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T174129, end_date=20250920T174130
+[2025-09-20T17:41:30.779+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T17:41:30.780+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 11 for task get_table_list (('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)'); 138)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 309, in get_table_list
+    tables = profiler.list_tables()
+  File "/opt/airflow/dags/01_Bronce.py", line 157, in list_tables
+    with self.source_manager.get_connection() as conn:
+  File "/opt/airflow/dags/01_Bronce.py", line 56, in get_connection
+    return pyodbc.connect(self.get_connection_string())
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot open database "spaceparts" requested by the login. The login failed. (4060) (SQLDriverConnect)')
+[2025-09-20T17:41:30.817+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-09-20T17:41:30.960+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T17:41:30.962+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T17:43:56.791+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:43:57.103+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:43:57.123+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:43:57.124+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:43:57.145+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:43:57.158+0000] {standard_task_runner.py:72} INFO - Started process 96 to run task
+[2025-09-20T17:43:57.168+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '14', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmphaxjm93q']
+[2025-09-20T17:43:57.174+0000] {standard_task_runner.py:105} INFO - Job 14: Subtask get_table_list
+[2025-09-20T17:43:57.254+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host c1c330a5988a
+[2025-09-20T17:43:57.329+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:43:57.330+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:44:12.348+0000] {01_Bronce.py:316} ERROR - Error getting table list: ('HY000', "[HY000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Database 'SpacePartsCoDW' on server 'te3-training-eu.database.windows.net' is not currently available.  Please retry the connection later.  If the problem persists, contact customer support, and provide them the session tracing ID of '{1127F709-C5C3-41E4-8042-9787DE50B7AB}'. (40613) (SQLDriverConnect)")
+[2025-09-20T17:44:12.350+0000] {taskinstance.py:3313} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 309, in get_table_list
+    tables = profiler.list_tables()
+  File "/opt/airflow/dags/01_Bronce.py", line 157, in list_tables
+    with self.source_manager.get_connection() as conn:
+  File "/opt/airflow/dags/01_Bronce.py", line 56, in get_connection
+    return pyodbc.connect(self.get_connection_string())
+pyodbc.Error: ('HY000', "[HY000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Database 'SpacePartsCoDW' on server 'te3-training-eu.database.windows.net' is not currently available.  Please retry the connection later.  If the problem persists, contact customer support, and provide them the session tracing ID of '{1127F709-C5C3-41E4-8042-9787DE50B7AB}'. (40613) (SQLDriverConnect)")
+[2025-09-20T17:44:12.383+0000] {taskinstance.py:1226} INFO - Marking task as UP_FOR_RETRY. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T174357, end_date=20250920T174412
+[2025-09-20T17:44:12.450+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T17:44:12.450+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 14 for task get_table_list (('HY000', "[HY000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Database 'SpacePartsCoDW' on server 'te3-training-eu.database.windows.net' is not currently available.  Please retry the connection later.  If the problem persists, contact customer support, and provide them the session tracing ID of '{1127F709-C5C3-41E4-8042-9787DE50B7AB}'. (40613) (SQLDriverConnect)"); 96)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3006, in _run_raw_task
+    return _run_raw_task(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 274, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3161, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 3185, in _execute_task
+    return _execute_task(self, context, task_orig)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 768, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 734, in _execute_callable
+    return ExecutionCallableRunner(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/baseoperator.py", line 424, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+  File "/opt/airflow/dags/01_Bronce.py", line 309, in get_table_list
+    tables = profiler.list_tables()
+  File "/opt/airflow/dags/01_Bronce.py", line 157, in list_tables
+    with self.source_manager.get_connection() as conn:
+  File "/opt/airflow/dags/01_Bronce.py", line 56, in get_connection
+    return pyodbc.connect(self.get_connection_string())
+pyodbc.Error: ('HY000', "[HY000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Database 'SpacePartsCoDW' on server 'te3-training-eu.database.windows.net' is not currently available.  Please retry the connection later.  If the problem persists, contact customer support, and provide them the session tracing ID of '{1127F709-C5C3-41E4-8042-9787DE50B7AB}'. (40613) (SQLDriverConnect)")
+[2025-09-20T17:44:12.494+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2025-09-20T17:44:12.544+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T17:44:12.549+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T17:46:46.897+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:46:46.925+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:46:46.946+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:46:46.947+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:46:46.973+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:46:46.981+0000] {standard_task_runner.py:72} INFO - Started process 140 to run task
+[2025-09-20T17:46:46.992+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '15', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpy74tthk9']
+[2025-09-20T17:46:47.001+0000] {standard_task_runner.py:105} INFO - Job 15: Subtask get_table_list
+[2025-09-20T17:46:47.408+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host c1c330a5988a
+[2025-09-20T17:46:47.533+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:46:47.534+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:46:49.890+0000] {01_Bronce.py:310} INFO - Found 14 tables to process: ['dim.Brands', 'dim.Budget-Rate', 'dim.Customers', 'dim.Employees', 'dim.Exchange-Rate', 'dim.Invoice-DocType', 'dim.Order-DocType', 'dim.Order-Status', 'dim.Products', 'dim.Regions', 'fact.Budget', 'fact.Forecast', 'fact.Invoices', 'fact.Orders']
+[2025-09-20T17:46:49.911+0000] {python.py:240} INFO - Done. Returned value was: ['dim.Brands', 'dim.Budget-Rate', 'dim.Customers', 'dim.Employees', 'dim.Exchange-Rate', 'dim.Invoice-DocType', 'dim.Order-DocType', 'dim.Order-Status', 'dim.Products', 'dim.Regions', 'fact.Budget', 'fact.Forecast', 'fact.Invoices', 'fact.Orders']
+[2025-09-20T17:46:49.974+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T17:46:49.976+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T174646, end_date=20250920T174649
+[2025-09-20T17:46:50.061+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T17:46:50.335+0000] {taskinstance.py:3901} INFO - 14 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T17:46:50.338+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T18:02:20.131+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:02:20.471+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:02:20.494+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:02:20.495+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T18:02:20.531+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:02:20.539+0000] {standard_task_runner.py:72} INFO - Started process 96 to run task
+[2025-09-20T18:02:20.548+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '58', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpbam2pu0t']
+[2025-09-20T18:02:20.551+0000] {standard_task_runner.py:105} INFO - Job 58: Subtask get_table_list
+[2025-09-20T18:02:20.624+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host dcfe59692ee1
+[2025-09-20T18:02:20.713+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:02:20.714+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:02:22.816+0000] {01_Bronce.py:315} INFO - Found 14 tables to process: ['dim.Brands', 'dim.Budget-Rate', 'dim.Customers', 'dim.Employees', 'dim.Exchange-Rate', 'dim.Invoice-DocType', 'dim.Order-DocType', 'dim.Order-Status', 'dim.Products', 'dim.Regions', 'fact.Budget', 'fact.Forecast', 'fact.Invoices', 'fact.Orders']
+[2025-09-20T18:02:22.835+0000] {python.py:240} INFO - Done. Returned value was: ['dim.Brands', 'dim.Budget-Rate', 'dim.Customers', 'dim.Employees', 'dim.Exchange-Rate', 'dim.Invoice-DocType', 'dim.Order-DocType', 'dim.Order-Status', 'dim.Products', 'dim.Regions', 'fact.Budget', 'fact.Forecast', 'fact.Invoices', 'fact.Orders']
+[2025-09-20T18:02:22.860+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T18:02:22.860+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T180220, end_date=20250920T180222
+[2025-09-20T18:02:22.929+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T18:02:23.008+0000] {taskinstance.py:3901} INFO - 14 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T18:02:23.012+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T18:31:40.421+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:31:40.438+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:31:40.445+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:31:40.445+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T18:31:40.454+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): get_table_list> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:31:40.458+0000] {standard_task_runner.py:72} INFO - Started process 145 to run task
+[2025-09-20T18:31:40.461+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'get_table_list', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '107', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpixjcmjri']
+[2025-09-20T18:31:40.463+0000] {standard_task_runner.py:105} INFO - Job 107: Subtask get_table_list
+[2025-09-20T18:31:40.707+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.get_table_list scheduled__2024-01-01T00:00:00+00:00 [running]> on host 4c4d6e18e259
+[2025-09-20T18:31:40.771+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='get_table_list' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:31:40.772+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:31:42.910+0000] {01_Bronce.py:268} INFO - Found 14 tables to process: ['dim.Brands', 'dim.Budget-Rate', 'dim.Customers', 'dim.Employees', 'dim.Exchange-Rate', 'dim.Invoice-DocType', 'dim.Order-DocType', 'dim.Order-Status', 'dim.Products', 'dim.Regions', 'fact.Budget', 'fact.Forecast', 'fact.Invoices', 'fact.Orders']
+[2025-09-20T18:31:42.932+0000] {python.py:240} INFO - Done. Returned value was: ['dim.Brands', 'dim.Budget-Rate', 'dim.Customers', 'dim.Employees', 'dim.Exchange-Rate', 'dim.Invoice-DocType', 'dim.Order-DocType', 'dim.Order-Status', 'dim.Products', 'dim.Regions', 'fact.Budget', 'fact.Forecast', 'fact.Invoices', 'fact.Orders']
+[2025-09-20T18:31:42.961+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T18:31:42.962+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts, task_id=get_table_list, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T183140, end_date=20250920T183142
+[2025-09-20T18:31:43.003+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T18:31:43.195+0000] {taskinstance.py:3901} INFO - 14 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T18:31:43.199+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

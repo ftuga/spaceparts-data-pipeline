@@ -1,0 +1,32 @@
+[2025-09-20T18:19:07.171+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:19:07.319+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Invoices scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:19:07.327+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Invoices scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:19:07.328+0000] {taskinstance.py:2867} INFO - Starting attempt 2 of 3
+[2025-09-20T18:19:07.340+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Invoices> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:19:07.343+0000] {standard_task_runner.py:72} INFO - Started process 87 to run task
+[2025-09-20T18:19:07.348+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Invoices', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '102', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpgyml843k']
+[2025-09-20T18:19:07.351+0000] {standard_task_runner.py:105} INFO - Job 102: Subtask extract_load_fact_Invoices
+[2025-09-20T18:19:07.400+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Invoices scheduled__2024-01-01T00:00:00+00:00 [running]> on host b1f9ac94505c
+[2025-09-20T18:19:07.479+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Invoices' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:19:07.481+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:19:07.521+0000] {01_Bronce.py:349} INFO - Starting extraction for table: fact.Invoices
+[2025-09-20T18:19:10.851+0000] {01_Bronce.py:361} INFO - Table fact.Invoices has 18,459,441 rows
+[2025-09-20T18:19:10.851+0000] {01_Bronce.py:375} INFO - Extracting data from fact.Invoices
+[2025-09-20T18:24:19.575+0000] {01_Bronce.py:392} INFO - Loading 18459441 rows to bronze_fact_invoices
+[2025-09-20T18:24:55.015+0000] {local_task_job_runner.py:266} INFO - Task exited with return code -9. For more information, see https://***.apache.org/docs/apache-***/stable/troubleshooting.html#LocalTaskJob-killed
+[2025-09-20T18:24:55.684+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T18:24:55.689+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T18:42:38.966+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:42:39.001+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Invoices scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:42:39.016+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Invoices scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:42:39.016+0000] {taskinstance.py:2867} INFO - Starting attempt 2 of 3
+[2025-09-20T18:42:39.030+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Invoices> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:42:39.034+0000] {standard_task_runner.py:72} INFO - Started process 345 to run task
+[2025-09-20T18:42:39.038+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Invoices', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '123', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpitbtre_s']
+[2025-09-20T18:42:39.042+0000] {standard_task_runner.py:105} INFO - Job 123: Subtask extract_load_fact_Invoices
+[2025-09-20T18:42:39.895+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Invoices scheduled__2024-01-01T00:00:00+00:00 [running]> on host 4c4d6e18e259
+[2025-09-20T18:42:39.980+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Invoices' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:42:39.981+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:42:39.997+0000] {01_Bronce.py:279} INFO - Starting extraction for table: fact.Invoices
+[2025-09-20T18:42:43.166+0000] {01_Bronce.py:291} INFO - Table fact.Invoices has 18,459,441 rows
+[2025-09-20T18:42:43.167+0000] {01_Bronce.py:305} INFO - Extracting data from fact.Invoices

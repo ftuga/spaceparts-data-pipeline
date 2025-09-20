@@ -1,0 +1,26 @@
+[2025-09-20T19:04:35.196+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T19:04:35.271+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_fact_Forecast scheduled__2024-01-02T00:00:00+00:00 [queued]>
+[2025-09-20T19:04:35.323+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_fact_Forecast scheduled__2024-01-02T00:00:00+00:00 [queued]>
+[2025-09-20T19:04:35.324+0000] {taskinstance.py:2867} INFO - Starting attempt 2 of 3
+[2025-09-20T19:04:35.651+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Forecast> on 2024-01-02 00:00:00+00:00
+[2025-09-20T19:04:35.659+0000] {standard_task_runner.py:72} INFO - Started process 128 to run task
+[2025-09-20T19:04:35.669+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts_optimized', 'extract_load_fact_Forecast', 'scheduled__2024-01-02T00:00:00+00:00', '--job-id', '193', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmp7sy0ya1n']
+[2025-09-20T19:04:35.676+0000] {standard_task_runner.py:105} INFO - Job 193: Subtask extract_load_fact_Forecast
+[2025-09-20T19:04:35.840+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_fact_Forecast scheduled__2024-01-02T00:00:00+00:00 [running]> on host 7abc58c5db43
+[2025-09-20T19:04:36.183+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts_optimized' AIRFLOW_CTX_TASK_ID='extract_load_fact_Forecast' AIRFLOW_CTX_EXECUTION_DATE='2024-01-02T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-02T00:00:00+00:00'
+[2025-09-20T19:04:36.185+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T19:04:36.228+0000] {01_Bronce.py:357} INFO - Starting optimized extraction for table: fact.Forecast
+[2025-09-20T19:04:39.532+0000] {01_Bronce.py:368} INFO - Table fact.Forecast has 5,197 rows
+[2025-09-20T19:04:39.532+0000] {01_Bronce.py:389} INFO - Using chunk size: 50,000 for 5,197 rows
+[2025-09-20T19:04:39.533+0000] {01_Bronce.py:393} INFO - Starting streaming extraction and load for fact.Forecast
+[2025-09-20T19:04:46.162+0000] {01_Bronce.py:223} INFO - Processing chunk 1 with 5197 rows
+[2025-09-20T19:04:46.256+0000] {01_Bronce.py:275} INFO - Table bronze_fact_forecast created successfully
+[2025-09-20T19:04:47.827+0000] {01_Bronce.py:324} INFO - Loaded chunk: 5,197 rows. Total: 5,197
+[2025-09-20T19:04:48.336+0000] {01_Bronce.py:330} INFO - Completed loading 5,197 total rows to bronze_fact_forecast
+[2025-09-20T19:04:48.337+0000] {01_Bronce.py:406} INFO - Successfully loaded 5,197 records to bronze_fact_forecast
+[2025-09-20T19:04:48.366+0000] {python.py:240} INFO - Done. Returned value was: {'source_table': 'fact.Forecast', 'bronze_table': 'bronze_fact_forecast', 'record_count': 5197, 'status': 'success', 'extraction_time': '2025-09-20T19:04:48.337203', 'chunk_size_used': 50000}
+[2025-09-20T19:04:48.401+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T19:04:48.402+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts_optimized, task_id=extract_load_fact_Forecast, run_id=scheduled__2024-01-02T00:00:00+00:00, execution_date=20240102T000000, start_date=20250920T190435, end_date=20250920T190448
+[2025-09-20T19:04:48.490+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T19:04:48.560+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T19:04:48.564+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

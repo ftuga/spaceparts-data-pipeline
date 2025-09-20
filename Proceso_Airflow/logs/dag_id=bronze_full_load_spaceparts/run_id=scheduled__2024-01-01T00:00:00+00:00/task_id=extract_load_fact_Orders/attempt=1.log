@@ -1,0 +1,51 @@
+[2025-09-20T17:46:54.775+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T17:46:54.976+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:46:55.015+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T17:46:55.016+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T17:46:55.119+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Orders> on 2024-01-01 00:00:00+00:00
+[2025-09-20T17:46:55.137+0000] {standard_task_runner.py:72} INFO - Started process 188 to run task
+[2025-09-20T17:46:55.182+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Orders', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '26', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmp4r075tco']
+[2025-09-20T17:46:55.238+0000] {standard_task_runner.py:105} INFO - Job 26: Subtask extract_load_fact_Orders
+[2025-09-20T17:46:57.332+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [running]> on host c1c330a5988a
+[2025-09-20T17:46:57.957+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Orders' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T17:46:57.962+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T17:46:58.034+0000] {01_Bronce.py:321} INFO - Starting extraction for table: fact.Orders
+[2025-09-20T17:47:01.328+0000] {01_Bronce.py:333} INFO - Table fact.Orders has 16,910,069 rows
+[2025-09-20T17:47:01.329+0000] {01_Bronce.py:347} INFO - Extracting data from fact.Orders
+[2025-09-20T18:02:24.356+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:02:24.384+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:02:24.396+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:02:24.396+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T18:02:24.413+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Orders> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:02:24.419+0000] {standard_task_runner.py:72} INFO - Started process 130 to run task
+[2025-09-20T18:02:24.423+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Orders', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '61', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpaxs_svbe']
+[2025-09-20T18:02:24.427+0000] {standard_task_runner.py:105} INFO - Job 61: Subtask extract_load_fact_Orders
+[2025-09-20T18:02:24.758+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [running]> on host dcfe59692ee1
+[2025-09-20T18:02:24.846+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Orders' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:02:24.847+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:02:24.862+0000] {01_Bronce.py:326} INFO - Starting extraction for table: fact.Orders
+[2025-09-20T18:02:28.060+0000] {01_Bronce.py:338} INFO - Table fact.Orders has 16,910,069 rows
+[2025-09-20T18:02:28.060+0000] {01_Bronce.py:352} INFO - Extracting data from fact.Orders
+[2025-09-20T18:07:28.063+0000] {job.py:229} INFO - Heartbeat recovered after 11.06 seconds
+[2025-09-20T18:07:56.035+0000] {job.py:229} INFO - Heartbeat recovered after 28.26 seconds
+[2025-09-20T18:10:40.457+0000] {job.py:229} INFO - Heartbeat recovered after 167.05 seconds
+[2025-09-20T18:10:40.665+0000] {local_task_job_runner.py:266} INFO - Task exited with return code -9. For more information, see https://***.apache.org/docs/apache-***/stable/troubleshooting.html#LocalTaskJob-killed
+[2025-09-20T18:10:42.541+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T18:10:42.563+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
+[2025-09-20T18:31:45.536+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T18:31:45.615+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:31:45.638+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T18:31:45.639+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T18:31:45.674+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_fact_Orders> on 2024-01-01 00:00:00+00:00
+[2025-09-20T18:31:45.685+0000] {standard_task_runner.py:72} INFO - Started process 188 to run task
+[2025-09-20T18:31:45.694+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts', 'extract_load_fact_Orders', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '115', '--raw', '--subdir', 'DAGS_FOLDER/01_Bronce.py', '--cfg-path', '/tmp/tmpm5lq8myj']
+[2025-09-20T18:31:45.699+0000] {standard_task_runner.py:105} INFO - Job 115: Subtask extract_load_fact_Orders
+[2025-09-20T18:31:46.271+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts.extract_load_fact_Orders scheduled__2024-01-01T00:00:00+00:00 [running]> on host 4c4d6e18e259
+[2025-09-20T18:31:46.454+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts' AIRFLOW_CTX_TASK_ID='extract_load_fact_Orders' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T18:31:46.456+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T18:31:46.484+0000] {01_Bronce.py:279} INFO - Starting extraction for table: fact.Orders
+[2025-09-20T18:31:49.617+0000] {01_Bronce.py:291} INFO - Table fact.Orders has 16,910,069 rows
+[2025-09-20T18:31:49.618+0000] {01_Bronce.py:305} INFO - Extracting data from fact.Orders
+[2025-09-20T18:36:13.511+0000] {local_task_job_runner.py:266} INFO - Task exited with return code -9. For more information, see https://***.apache.org/docs/apache-***/stable/troubleshooting.html#LocalTaskJob-killed
+[2025-09-20T18:36:14.000+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T18:36:14.007+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
