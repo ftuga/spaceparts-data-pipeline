@@ -1,5 +1,3 @@
-Perfecto, agregaré esos detalles importantes. Aquí está la versión actualizada del README:
-
 # SpaceParts Data Pipeline - Proyecto ETL
 
 ## Descripción General
