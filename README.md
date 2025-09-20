@@ -94,9 +94,10 @@ POSTGRES_PASSWORD=airflow
 
 ### 2. Microsoft Fabric - Cloud
 
+## ARQUITECTURA_CLOUD
 ![Diagrama Airflow Orquestador](Anexos/ARQUITECTURA_CLOUD.png)
 
-ARQUITECTURA_CLOUD
+
 
 ### **Estructura de proyecto**
 
