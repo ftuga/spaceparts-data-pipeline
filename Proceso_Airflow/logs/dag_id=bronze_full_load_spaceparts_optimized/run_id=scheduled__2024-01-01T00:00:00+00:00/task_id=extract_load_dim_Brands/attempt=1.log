@@ -1,0 +1,26 @@
+[2025-09-20T19:47:09.153+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T19:47:09.176+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Brands scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T19:47:09.191+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Brands scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T19:47:09.192+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T19:47:09.211+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_dim_Brands> on 2024-01-01 00:00:00+00:00
+[2025-09-20T19:47:09.216+0000] {standard_task_runner.py:72} INFO - Started process 126 to run task
+[2025-09-20T19:47:09.223+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts_optimized', 'extract_load_dim_Brands', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '206', '--raw', '--subdir', 'DAGS_FOLDER/spaceparts_etl_orchestrator.py', '--cfg-path', '/tmp/tmpegygueox']
+[2025-09-20T19:47:09.226+0000] {standard_task_runner.py:105} INFO - Job 206: Subtask extract_load_dim_Brands
+[2025-09-20T19:47:09.563+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Brands scheduled__2024-01-01T00:00:00+00:00 [running]> on host fd99d81282fc
+[2025-09-20T19:47:09.641+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts_optimized' AIRFLOW_CTX_TASK_ID='extract_load_dim_Brands' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T19:47:09.642+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T19:47:09.656+0000] {spaceparts_etl_orchestrator.py:357} INFO - Starting optimized extraction for table: dim.Brands
+[2025-09-20T19:47:12.868+0000] {spaceparts_etl_orchestrator.py:368} INFO - Table dim.Brands has 20 rows
+[2025-09-20T19:47:12.869+0000] {spaceparts_etl_orchestrator.py:389} INFO - Using chunk size: 50,000 for 20 rows
+[2025-09-20T19:47:12.869+0000] {spaceparts_etl_orchestrator.py:393} INFO - Starting streaming extraction and load for dim.Brands
+[2025-09-20T19:47:15.141+0000] {spaceparts_etl_orchestrator.py:223} INFO - Processing chunk 1 with 20 rows
+[2025-09-20T19:47:15.205+0000] {spaceparts_etl_orchestrator.py:275} INFO - Table bronze_dim_brands created successfully
+[2025-09-20T19:47:15.216+0000] {spaceparts_etl_orchestrator.py:324} INFO - Loaded chunk: 20 rows. Total: 20
+[2025-09-20T19:47:15.589+0000] {spaceparts_etl_orchestrator.py:330} INFO - Completed loading 20 total rows to bronze_dim_brands
+[2025-09-20T19:47:15.590+0000] {spaceparts_etl_orchestrator.py:406} INFO - Successfully loaded 20 records to bronze_dim_brands
+[2025-09-20T19:47:15.608+0000] {python.py:240} INFO - Done. Returned value was: {'source_table': 'dim.Brands', 'bronze_table': 'bronze_dim_brands', 'record_count': 20, 'status': 'success', 'extraction_time': '2025-09-20T19:47:15.590458', 'chunk_size_used': 50000}
+[2025-09-20T19:47:15.635+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T19:47:15.635+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts_optimized, task_id=extract_load_dim_Brands, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T194709, end_date=20250920T194715
+[2025-09-20T19:47:15.731+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T19:47:15.755+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T19:47:15.757+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

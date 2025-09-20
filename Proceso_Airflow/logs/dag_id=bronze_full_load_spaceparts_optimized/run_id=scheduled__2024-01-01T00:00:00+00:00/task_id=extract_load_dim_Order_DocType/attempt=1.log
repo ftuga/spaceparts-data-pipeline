@@ -1,0 +1,25 @@
+[2025-09-20T19:47:09.198+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T19:47:09.220+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Order_DocType scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T19:47:09.239+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Order_DocType scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T19:47:09.240+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T19:47:09.258+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_dim_Order_DocType> on 2024-01-01 00:00:00+00:00
+[2025-09-20T19:47:09.263+0000] {standard_task_runner.py:72} INFO - Started process 146 to run task
+[2025-09-20T19:47:09.269+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts_optimized', 'extract_load_dim_Order_DocType', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '217', '--raw', '--subdir', 'DAGS_FOLDER/spaceparts_etl_orchestrator.py', '--cfg-path', '/tmp/tmp8nfsw7mm']
+[2025-09-20T19:47:09.272+0000] {standard_task_runner.py:105} INFO - Job 217: Subtask extract_load_dim_Order_DocType
+[2025-09-20T19:47:09.637+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Order_DocType scheduled__2024-01-01T00:00:00+00:00 [running]> on host fd99d81282fc
+[2025-09-20T19:47:09.713+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts_optimized' AIRFLOW_CTX_TASK_ID='extract_load_dim_Order_DocType' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T19:47:09.714+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T19:47:09.726+0000] {spaceparts_etl_orchestrator.py:357} INFO - Starting optimized extraction for table: dim.Order-DocType
+[2025-09-20T19:47:12.977+0000] {spaceparts_etl_orchestrator.py:368} INFO - Table dim.Order-DocType has 4 rows
+[2025-09-20T19:47:12.977+0000] {spaceparts_etl_orchestrator.py:389} INFO - Using chunk size: 50,000 for 4 rows
+[2025-09-20T19:47:12.978+0000] {spaceparts_etl_orchestrator.py:393} INFO - Starting streaming extraction and load for dim.Order-DocType
+[2025-09-20T19:47:15.381+0000] {spaceparts_etl_orchestrator.py:223} INFO - Processing chunk 1 with 4 rows
+[2025-09-20T19:47:15.455+0000] {spaceparts_etl_orchestrator.py:275} INFO - Table bronze_dim_order_doctype created successfully
+[2025-09-20T19:47:15.462+0000] {spaceparts_etl_orchestrator.py:324} INFO - Loaded chunk: 4 rows. Total: 4
+[2025-09-20T19:47:15.867+0000] {spaceparts_etl_orchestrator.py:330} INFO - Completed loading 4 total rows to bronze_dim_order_doctype
+[2025-09-20T19:47:15.868+0000] {spaceparts_etl_orchestrator.py:406} INFO - Successfully loaded 4 records to bronze_dim_order_doctype
+[2025-09-20T19:47:15.888+0000] {python.py:240} INFO - Done. Returned value was: {'source_table': 'dim.Order-DocType', 'bronze_table': 'bronze_dim_order_doctype', 'record_count': 4, 'status': 'success', 'extraction_time': '2025-09-20T19:47:15.867971', 'chunk_size_used': 50000}
+[2025-09-20T19:47:15.913+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T19:47:15.913+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts_optimized, task_id=extract_load_dim_Order_DocType, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T194709, end_date=20250920T194715
+[2025-09-20T19:47:15.977+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T19:47:15.989+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

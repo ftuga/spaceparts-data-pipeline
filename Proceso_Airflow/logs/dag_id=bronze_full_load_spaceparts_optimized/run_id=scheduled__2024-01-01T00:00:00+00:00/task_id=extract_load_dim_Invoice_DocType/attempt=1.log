@@ -1,0 +1,26 @@
+[2025-09-20T19:47:09.336+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T19:47:09.360+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Invoice_DocType scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T19:47:09.372+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Invoice_DocType scheduled__2024-01-01T00:00:00+00:00 [queued]>
+[2025-09-20T19:47:09.372+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 3
+[2025-09-20T19:47:09.388+0000] {taskinstance.py:2890} INFO - Executing <Task(PythonOperator): extract_load_dim_Invoice_DocType> on 2024-01-01 00:00:00+00:00
+[2025-09-20T19:47:09.394+0000] {standard_task_runner.py:72} INFO - Started process 152 to run task
+[2025-09-20T19:47:09.404+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'bronze_full_load_spaceparts_optimized', 'extract_load_dim_Invoice_DocType', 'scheduled__2024-01-01T00:00:00+00:00', '--job-id', '219', '--raw', '--subdir', 'DAGS_FOLDER/spaceparts_etl_orchestrator.py', '--cfg-path', '/tmp/tmpmyeqb4u8']
+[2025-09-20T19:47:09.409+0000] {standard_task_runner.py:105} INFO - Job 219: Subtask extract_load_dim_Invoice_DocType
+[2025-09-20T19:47:09.497+0000] {task_command.py:467} INFO - Running <TaskInstance: bronze_full_load_spaceparts_optimized.extract_load_dim_Invoice_DocType scheduled__2024-01-01T00:00:00+00:00 [running]> on host fd99d81282fc
+[2025-09-20T19:47:09.602+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-team' AIRFLOW_CTX_DAG_ID='bronze_full_load_spaceparts_optimized' AIRFLOW_CTX_TASK_ID='extract_load_dim_Invoice_DocType' AIRFLOW_CTX_EXECUTION_DATE='2024-01-01T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-01-01T00:00:00+00:00'
+[2025-09-20T19:47:09.604+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T19:47:09.622+0000] {spaceparts_etl_orchestrator.py:357} INFO - Starting optimized extraction for table: dim.Invoice-DocType
+[2025-09-20T19:47:12.855+0000] {spaceparts_etl_orchestrator.py:368} INFO - Table dim.Invoice-DocType has 5 rows
+[2025-09-20T19:47:12.856+0000] {spaceparts_etl_orchestrator.py:389} INFO - Using chunk size: 50,000 for 5 rows
+[2025-09-20T19:47:12.856+0000] {spaceparts_etl_orchestrator.py:393} INFO - Starting streaming extraction and load for dim.Invoice-DocType
+[2025-09-20T19:47:15.148+0000] {spaceparts_etl_orchestrator.py:223} INFO - Processing chunk 1 with 5 rows
+[2025-09-20T19:47:15.206+0000] {spaceparts_etl_orchestrator.py:275} INFO - Table bronze_dim_invoice_doctype created successfully
+[2025-09-20T19:47:15.215+0000] {spaceparts_etl_orchestrator.py:324} INFO - Loaded chunk: 5 rows. Total: 5
+[2025-09-20T19:47:15.691+0000] {spaceparts_etl_orchestrator.py:330} INFO - Completed loading 5 total rows to bronze_dim_invoice_doctype
+[2025-09-20T19:47:15.692+0000] {spaceparts_etl_orchestrator.py:406} INFO - Successfully loaded 5 records to bronze_dim_invoice_doctype
+[2025-09-20T19:47:15.724+0000] {python.py:240} INFO - Done. Returned value was: {'source_table': 'dim.Invoice-DocType', 'bronze_table': 'bronze_dim_invoice_doctype', 'record_count': 5, 'status': 'success', 'extraction_time': '2025-09-20T19:47:15.692023', 'chunk_size_used': 50000}
+[2025-09-20T19:47:15.748+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-09-20T19:47:15.748+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=bronze_full_load_spaceparts_optimized, task_id=extract_load_dim_Invoice_DocType, run_id=scheduled__2024-01-01T00:00:00+00:00, execution_date=20240101T000000, start_date=20250920T194709, end_date=20250920T194715
+[2025-09-20T19:47:15.788+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-09-20T19:47:15.808+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-09-20T19:47:15.810+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

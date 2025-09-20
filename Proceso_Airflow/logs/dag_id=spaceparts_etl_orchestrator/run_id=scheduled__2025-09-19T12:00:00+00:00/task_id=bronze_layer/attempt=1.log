@@ -1,0 +1,332 @@
+[2025-09-20T20:05:25.094+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-09-20T20:05:25.106+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: spaceparts_etl_orchestrator.bronze_layer scheduled__2025-09-19T12:00:00+00:00 [queued]>
+[2025-09-20T20:05:25.111+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: spaceparts_etl_orchestrator.bronze_layer scheduled__2025-09-19T12:00:00+00:00 [queued]>
+[2025-09-20T20:05:25.111+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 2
+[2025-09-20T20:05:25.119+0000] {taskinstance.py:2890} INFO - Executing <Task(_PythonDecoratedOperator): bronze_layer> on 2025-09-19 12:00:00+00:00
+[2025-09-20T20:05:25.121+0000] {standard_task_runner.py:72} INFO - Started process 113 to run task
+[2025-09-20T20:05:25.124+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'spaceparts_etl_orchestrator', 'bronze_layer', 'scheduled__2025-09-19T12:00:00+00:00', '--job-id', '226', '--raw', '--subdir', 'DAGS_FOLDER/spaceparts_etl_orchestrator.py', '--cfg-path', '/tmp/tmppmoxizbb']
+[2025-09-20T20:05:25.126+0000] {standard_task_runner.py:105} INFO - Job 226: Subtask bronze_layer
+[2025-09-20T20:05:25.165+0000] {task_command.py:467} INFO - Running <TaskInstance: spaceparts_etl_orchestrator.bronze_layer scheduled__2025-09-19T12:00:00+00:00 [running]> on host c921f5e27d13
+[2025-09-20T20:05:25.210+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-eng' AIRFLOW_CTX_DAG_ID='spaceparts_etl_orchestrator' AIRFLOW_CTX_TASK_ID='bronze_layer' AIRFLOW_CTX_EXECUTION_DATE='2025-09-19T12:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-09-19T12:00:00+00:00'
+[2025-09-20T20:05:25.211+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-09-20T20:05:25.212+0000] {spaceparts_etl_orchestrator.py:29} INFO - BRONZE | ds=2025-09-19
+[2025-09-20T20:05:25.212+0000] {bronze_processor.py:476} INFO - ================================================================================
+[2025-09-20T20:05:25.212+0000] {bronze_processor.py:477} INFO - INICIANDO BRONZE LAYER PIPELINE - VOLUME OPTIMIZED
+[2025-09-20T20:05:25.212+0000] {bronze_processor.py:478} INFO - ================================================================================
+[2025-09-20T20:05:28.092+0000] {bronze_processor.py:400} INFO - Found 14 tables to process
+[2025-09-20T20:06:06.532+0000] {bronze_processor.py:494} INFO - Processing plan: 3 large tables (streaming), 11 small tables (full load)
+[2025-09-20T20:06:06.532+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Brands
+[2025-09-20T20:06:08.966+0000] {bronze_processor.py:413} INFO - Table dim.Brands has 20 rows
+[2025-09-20T20:06:08.968+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:06:11.442+0000] {bronze_processor.py:224} INFO - Full load completed: 20 rows
+[2025-09-20T20:06:11.497+0000] {bronze_processor.py:296} INFO - Full load completed: 20 rows to bronze_dim_brands
+[2025-09-20T20:06:11.497+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Brands: 20 records using complete_table
+[2025-09-20T20:06:11.497+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Budget-Rate
+[2025-09-20T20:06:17.483+0000] {bronze_processor.py:413} INFO - Table dim.Budget-Rate has 15 rows
+[2025-09-20T20:06:17.484+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:06:19.858+0000] {bronze_processor.py:224} INFO - Full load completed: 15 rows
+[2025-09-20T20:06:19.878+0000] {bronze_processor.py:296} INFO - Full load completed: 15 rows to bronze_dim_budget_rate
+[2025-09-20T20:06:19.878+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Budget-Rate: 15 records using complete_table
+[2025-09-20T20:06:19.878+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Customers
+[2025-09-20T20:06:22.362+0000] {bronze_processor.py:413} INFO - Table dim.Customers has 3,911 rows
+[2025-09-20T20:06:22.363+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:06:26.130+0000] {bronze_processor.py:224} INFO - Full load completed: 3911 rows
+[2025-09-20T20:06:26.644+0000] {bronze_processor.py:296} INFO - Full load completed: 3,911 rows to bronze_dim_customers
+[2025-09-20T20:06:26.644+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Customers: 3,911 records using complete_table
+[2025-09-20T20:06:26.645+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Employees
+[2025-09-20T20:06:29.154+0000] {bronze_processor.py:413} INFO - Table dim.Employees has 893 rows
+[2025-09-20T20:06:29.155+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:06:32.898+0000] {bronze_processor.py:224} INFO - Full load completed: 893 rows
+[2025-09-20T20:06:32.973+0000] {bronze_processor.py:296} INFO - Full load completed: 893 rows to bronze_dim_employees
+[2025-09-20T20:06:32.973+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Employees: 893 records using complete_table
+[2025-09-20T20:06:32.973+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Exchange-Rate
+[2025-09-20T20:06:35.630+0000] {bronze_processor.py:413} INFO - Table dim.Exchange-Rate has 57,900 rows
+[2025-09-20T20:06:35.631+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:06:40.881+0000] {bronze_processor.py:224} INFO - Full load completed: 57900 rows
+[2025-09-20T20:06:52.440+0000] {bronze_processor.py:296} INFO - Full load completed: 57,900 rows to bronze_dim_exchange_rate
+[2025-09-20T20:06:52.441+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Exchange-Rate: 57,900 records using complete_table
+[2025-09-20T20:06:52.448+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Invoice-DocType
+[2025-09-20T20:06:55.108+0000] {bronze_processor.py:413} INFO - Table dim.Invoice-DocType has 5 rows
+[2025-09-20T20:06:55.108+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:06:57.532+0000] {bronze_processor.py:224} INFO - Full load completed: 5 rows
+[2025-09-20T20:06:57.551+0000] {bronze_processor.py:296} INFO - Full load completed: 5 rows to bronze_dim_invoice_doctype
+[2025-09-20T20:06:57.551+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Invoice-DocType: 5 records using complete_table
+[2025-09-20T20:06:57.551+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Order-DocType
+[2025-09-20T20:06:59.934+0000] {bronze_processor.py:413} INFO - Table dim.Order-DocType has 4 rows
+[2025-09-20T20:06:59.935+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:07:02.446+0000] {bronze_processor.py:224} INFO - Full load completed: 4 rows
+[2025-09-20T20:07:02.479+0000] {bronze_processor.py:296} INFO - Full load completed: 4 rows to bronze_dim_order_doctype
+[2025-09-20T20:07:02.479+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Order-DocType: 4 records using complete_table
+[2025-09-20T20:07:02.479+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Order-Status
+[2025-09-20T20:07:05.032+0000] {bronze_processor.py:413} INFO - Table dim.Order-Status has 6 rows
+[2025-09-20T20:07:05.033+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:07:07.482+0000] {bronze_processor.py:224} INFO - Full load completed: 6 rows
+[2025-09-20T20:07:07.510+0000] {bronze_processor.py:296} INFO - Full load completed: 6 rows to bronze_dim_order_status
+[2025-09-20T20:07:07.511+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Order-Status: 6 records using complete_table
+[2025-09-20T20:07:07.511+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Products
+[2025-09-20T20:07:09.894+0000] {bronze_processor.py:413} INFO - Table dim.Products has 256,293 rows
+[2025-09-20T20:07:09.895+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:07:43.277+0000] {bronze_processor.py:224} INFO - Full load completed: 256293 rows
+[2025-09-20T20:08:58.999+0000] {bronze_processor.py:296} INFO - Full load completed: 256,293 rows to bronze_dim_products
+[2025-09-20T20:08:59.003+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Products: 256,293 records using complete_table
+[2025-09-20T20:08:59.236+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: dim.Regions
+[2025-09-20T20:09:02.101+0000] {bronze_processor.py:413} INFO - Table dim.Regions has 181 rows
+[2025-09-20T20:09:02.101+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:09:04.849+0000] {bronze_processor.py:224} INFO - Full load completed: 181 rows
+[2025-09-20T20:09:04.900+0000] {bronze_processor.py:296} INFO - Full load completed: 181 rows to bronze_dim_regions
+[2025-09-20T20:09:04.900+0000] {bronze_processor.py:458} INFO - Successfully processed dim.Regions: 181 records using complete_table
+[2025-09-20T20:09:04.900+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: fact.Budget
+[2025-09-20T20:09:07.495+0000] {bronze_processor.py:413} INFO - Table fact.Budget has 2,947,811 rows
+[2025-09-20T20:09:07.495+0000] {bronze_processor.py:429} INFO - Processing strategy: standard_chunks (mode: streaming)
+[2025-09-20T20:09:07.496+0000] {bronze_processor.py:440} INFO - Using streaming with chunk size: 50,000
+[2025-09-20T20:09:15.006+0000] {bronze_processor.py:242} INFO - Processing chunk 1 with 50000 rows
+[2025-09-20T20:09:15.079+0000] {bronze_processor.py:322} INFO - Table structure created: bronze_fact_budget
+[2025-09-20T20:09:20.168+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 50,000
+[2025-09-20T20:09:20.589+0000] {bronze_processor.py:242} INFO - Processing chunk 2 with 50000 rows
+[2025-09-20T20:09:26.486+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 100,000
+[2025-09-20T20:09:26.793+0000] {bronze_processor.py:242} INFO - Processing chunk 3 with 50000 rows
+[2025-09-20T20:09:32.211+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 150,000
+[2025-09-20T20:09:32.619+0000] {bronze_processor.py:242} INFO - Processing chunk 4 with 50000 rows
+[2025-09-20T20:09:38.646+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 200,000
+[2025-09-20T20:09:39.186+0000] {bronze_processor.py:242} INFO - Processing chunk 5 with 50000 rows
+[2025-09-20T20:09:45.926+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 250,000
+[2025-09-20T20:09:46.265+0000] {bronze_processor.py:242} INFO - Processing chunk 6 with 50000 rows
+[2025-09-20T20:09:54.653+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 300,000
+[2025-09-20T20:09:55.126+0000] {bronze_processor.py:242} INFO - Processing chunk 7 with 50000 rows
+[2025-09-20T20:09:59.800+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 350,000
+[2025-09-20T20:10:00.188+0000] {bronze_processor.py:242} INFO - Processing chunk 8 with 50000 rows
+[2025-09-20T20:10:05.351+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 400,000
+[2025-09-20T20:10:05.689+0000] {bronze_processor.py:242} INFO - Processing chunk 9 with 50000 rows
+[2025-09-20T20:10:11.898+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 450,000
+[2025-09-20T20:10:12.213+0000] {bronze_processor.py:242} INFO - Processing chunk 10 with 50000 rows
+[2025-09-20T20:10:18.705+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 500,000
+[2025-09-20T20:10:19.024+0000] {bronze_processor.py:242} INFO - Processing chunk 11 with 50000 rows
+[2025-09-20T20:10:27.967+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 550,000
+[2025-09-20T20:10:28.306+0000] {bronze_processor.py:242} INFO - Processing chunk 12 with 50000 rows
+[2025-09-20T20:10:33.074+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 600,000
+[2025-09-20T20:10:33.426+0000] {bronze_processor.py:242} INFO - Processing chunk 13 with 50000 rows
+[2025-09-20T20:10:38.163+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 650,000
+[2025-09-20T20:10:38.468+0000] {bronze_processor.py:242} INFO - Processing chunk 14 with 50000 rows
+[2025-09-20T20:10:43.154+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 700,000
+[2025-09-20T20:10:43.450+0000] {bronze_processor.py:242} INFO - Processing chunk 15 with 50000 rows
+[2025-09-20T20:10:48.180+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 750,000
+[2025-09-20T20:10:48.476+0000] {bronze_processor.py:242} INFO - Processing chunk 16 with 50000 rows
+[2025-09-20T20:10:52.940+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 800,000
+[2025-09-20T20:10:53.337+0000] {bronze_processor.py:242} INFO - Processing chunk 17 with 50000 rows
+[2025-09-20T20:11:02.147+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 850,000
+[2025-09-20T20:11:02.534+0000] {bronze_processor.py:242} INFO - Processing chunk 18 with 50000 rows
+[2025-09-20T20:11:07.721+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 900,000
+[2025-09-20T20:11:08.116+0000] {bronze_processor.py:242} INFO - Processing chunk 19 with 50000 rows
+[2025-09-20T20:11:13.400+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 950,000
+[2025-09-20T20:11:13.695+0000] {bronze_processor.py:242} INFO - Processing chunk 20 with 50000 rows
+[2025-09-20T20:11:18.844+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,000,000
+[2025-09-20T20:11:19.233+0000] {bronze_processor.py:242} INFO - Processing chunk 21 with 50000 rows
+[2025-09-20T20:11:24.063+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,050,000
+[2025-09-20T20:11:24.455+0000] {bronze_processor.py:242} INFO - Processing chunk 22 with 50000 rows
+[2025-09-20T20:11:29.794+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,100,000
+[2025-09-20T20:11:30.157+0000] {bronze_processor.py:242} INFO - Processing chunk 23 with 50000 rows
+[2025-09-20T20:11:38.578+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,150,000
+[2025-09-20T20:11:38.916+0000] {bronze_processor.py:242} INFO - Processing chunk 24 with 50000 rows
+[2025-09-20T20:11:44.073+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,200,000
+[2025-09-20T20:11:44.385+0000] {bronze_processor.py:242} INFO - Processing chunk 25 with 50000 rows
+[2025-09-20T20:11:49.502+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,250,000
+[2025-09-20T20:11:49.959+0000] {bronze_processor.py:242} INFO - Processing chunk 26 with 50000 rows
+[2025-09-20T20:11:54.904+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,300,000
+[2025-09-20T20:11:55.422+0000] {bronze_processor.py:242} INFO - Processing chunk 27 with 50000 rows
+[2025-09-20T20:12:00.437+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,350,000
+[2025-09-20T20:12:00.795+0000] {bronze_processor.py:242} INFO - Processing chunk 28 with 50000 rows
+[2025-09-20T20:12:06.171+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,400,000
+[2025-09-20T20:12:06.459+0000] {bronze_processor.py:242} INFO - Processing chunk 29 with 50000 rows
+[2025-09-20T20:12:14.603+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,450,000
+[2025-09-20T20:12:14.961+0000] {bronze_processor.py:242} INFO - Processing chunk 30 with 50000 rows
+[2025-09-20T20:12:19.794+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,500,000
+[2025-09-20T20:12:20.060+0000] {bronze_processor.py:242} INFO - Processing chunk 31 with 50000 rows
+[2025-09-20T20:12:24.893+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,550,000
+[2025-09-20T20:12:25.198+0000] {bronze_processor.py:242} INFO - Processing chunk 32 with 50000 rows
+[2025-09-20T20:12:30.695+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,600,000
+[2025-09-20T20:12:30.992+0000] {bronze_processor.py:242} INFO - Processing chunk 33 with 50000 rows
+[2025-09-20T20:12:35.777+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,650,000
+[2025-09-20T20:12:36.075+0000] {bronze_processor.py:242} INFO - Processing chunk 34 with 50000 rows
+[2025-09-20T20:12:41.437+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,700,000
+[2025-09-20T20:12:41.808+0000] {bronze_processor.py:242} INFO - Processing chunk 35 with 50000 rows
+[2025-09-20T20:12:50.133+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,750,000
+[2025-09-20T20:12:50.566+0000] {bronze_processor.py:242} INFO - Processing chunk 36 with 50000 rows
+[2025-09-20T20:12:56.014+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,800,000
+[2025-09-20T20:12:56.473+0000] {bronze_processor.py:242} INFO - Processing chunk 37 with 50000 rows
+[2025-09-20T20:13:01.802+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,850,000
+[2025-09-20T20:13:02.197+0000] {bronze_processor.py:242} INFO - Processing chunk 38 with 50000 rows
+[2025-09-20T20:13:07.345+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,900,000
+[2025-09-20T20:13:07.716+0000] {bronze_processor.py:242} INFO - Processing chunk 39 with 50000 rows
+[2025-09-20T20:13:13.252+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 1,950,000
+[2025-09-20T20:13:13.746+0000] {bronze_processor.py:242} INFO - Processing chunk 40 with 50000 rows
+[2025-09-20T20:13:18.931+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,000,000
+[2025-09-20T20:13:19.436+0000] {bronze_processor.py:242} INFO - Processing chunk 41 with 50000 rows
+[2025-09-20T20:13:28.461+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,050,000
+[2025-09-20T20:13:28.943+0000] {bronze_processor.py:242} INFO - Processing chunk 42 with 50000 rows
+[2025-09-20T20:13:35.219+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,100,000
+[2025-09-20T20:13:35.769+0000] {bronze_processor.py:242} INFO - Processing chunk 43 with 50000 rows
+[2025-09-20T20:13:41.685+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,150,000
+[2025-09-20T20:13:42.084+0000] {bronze_processor.py:242} INFO - Processing chunk 44 with 50000 rows
+[2025-09-20T20:13:47.804+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,200,000
+[2025-09-20T20:13:48.171+0000] {bronze_processor.py:242} INFO - Processing chunk 45 with 50000 rows
+[2025-09-20T20:13:55.108+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,250,000
+[2025-09-20T20:13:55.541+0000] {bronze_processor.py:242} INFO - Processing chunk 46 with 50000 rows
+[2025-09-20T20:14:05.559+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,300,000
+[2025-09-20T20:14:05.892+0000] {bronze_processor.py:242} INFO - Processing chunk 47 with 50000 rows
+[2025-09-20T20:14:11.622+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,350,000
+[2025-09-20T20:14:11.949+0000] {bronze_processor.py:242} INFO - Processing chunk 48 with 50000 rows
+[2025-09-20T20:14:17.919+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,400,000
+[2025-09-20T20:14:18.244+0000] {bronze_processor.py:242} INFO - Processing chunk 49 with 50000 rows
+[2025-09-20T20:14:24.742+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,450,000
+[2025-09-20T20:14:25.205+0000] {bronze_processor.py:242} INFO - Processing chunk 50 with 50000 rows
+[2025-09-20T20:14:32.887+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,500,000
+[2025-09-20T20:14:37.045+0000] {bronze_processor.py:242} INFO - Processing chunk 51 with 50000 rows
+[2025-09-20T20:14:42.533+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,550,000
+[2025-09-20T20:14:42.945+0000] {bronze_processor.py:242} INFO - Processing chunk 52 with 50000 rows
+[2025-09-20T20:14:48.971+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,600,000
+[2025-09-20T20:14:49.283+0000] {bronze_processor.py:242} INFO - Processing chunk 53 with 50000 rows
+[2025-09-20T20:14:54.379+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,650,000
+[2025-09-20T20:14:54.774+0000] {bronze_processor.py:242} INFO - Processing chunk 54 with 50000 rows
+[2025-09-20T20:15:00.259+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,700,000
+[2025-09-20T20:15:00.618+0000] {bronze_processor.py:242} INFO - Processing chunk 55 with 50000 rows
+[2025-09-20T20:15:06.936+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,750,000
+[2025-09-20T20:15:07.387+0000] {bronze_processor.py:242} INFO - Processing chunk 56 with 50000 rows
+[2025-09-20T20:15:17.958+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,800,000
+[2025-09-20T20:15:18.328+0000] {bronze_processor.py:242} INFO - Processing chunk 57 with 50000 rows
+[2025-09-20T20:15:24.339+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,850,000
+[2025-09-20T20:15:24.609+0000] {bronze_processor.py:242} INFO - Processing chunk 58 with 50000 rows
+[2025-09-20T20:15:29.234+0000] {bronze_processor.py:372} INFO - Chunk loaded: 50,000 rows. Total: 2,900,000
+[2025-09-20T20:15:29.527+0000] {bronze_processor.py:242} INFO - Processing chunk 59 with 47811 rows
+[2025-09-20T20:15:34.102+0000] {bronze_processor.py:372} INFO - Chunk loaded: 47,811 rows. Total: 2,947,811
+[2025-09-20T20:15:34.493+0000] {bronze_processor.py:377} INFO - Streaming completed: 2,947,811 rows to bronze_fact_budget
+[2025-09-20T20:15:34.494+0000] {bronze_processor.py:458} INFO - Successfully processed fact.Budget: 2,947,811 records using standard_chunks
+[2025-09-20T20:15:34.494+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: fact.Forecast
+[2025-09-20T20:15:37.115+0000] {bronze_processor.py:413} INFO - Table fact.Forecast has 5,197 rows
+[2025-09-20T20:15:37.115+0000] {bronze_processor.py:429} INFO - Processing strategy: complete_table (mode: full_load)
+[2025-09-20T20:15:40.327+0000] {bronze_processor.py:224} INFO - Full load completed: 5197 rows
+[2025-09-20T20:15:41.092+0000] {bronze_processor.py:296} INFO - Full load completed: 5,197 rows to bronze_fact_forecast
+[2025-09-20T20:15:41.093+0000] {bronze_processor.py:458} INFO - Successfully processed fact.Forecast: 5,197 records using complete_table
+[2025-09-20T20:15:41.093+0000] {bronze_processor.py:409} INFO - Starting Bronze extraction for table: fact.Invoices
+[2025-09-20T20:15:43.530+0000] {bronze_processor.py:413} INFO - Table fact.Invoices has 18,459,441 rows
+[2025-09-20T20:15:43.530+0000] {bronze_processor.py:429} INFO - Processing strategy: large_chunks (mode: streaming)
+[2025-09-20T20:15:43.530+0000] {bronze_processor.py:440} INFO - Using streaming with chunk size: 25,000
+[2025-09-20T20:15:51.766+0000] {bronze_processor.py:242} INFO - Processing chunk 1 with 25000 rows
+[2025-09-20T20:15:51.824+0000] {bronze_processor.py:322} INFO - Table structure created: bronze_fact_invoices
+[2025-09-20T20:15:58.987+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 25,000
+[2025-09-20T20:15:59.682+0000] {bronze_processor.py:242} INFO - Processing chunk 2 with 25000 rows
+[2025-09-20T20:16:06.626+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 50,000
+[2025-09-20T20:16:07.152+0000] {bronze_processor.py:242} INFO - Processing chunk 3 with 25000 rows
+[2025-09-20T20:16:14.736+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 75,000
+[2025-09-20T20:16:15.174+0000] {bronze_processor.py:242} INFO - Processing chunk 4 with 25000 rows
+[2025-09-20T20:16:26.139+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 100,000
+[2025-09-20T20:16:26.628+0000] {bronze_processor.py:242} INFO - Processing chunk 5 with 25000 rows
+[2025-09-20T20:16:34.096+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 125,000
+[2025-09-20T20:16:34.496+0000] {bronze_processor.py:242} INFO - Processing chunk 6 with 25000 rows
+[2025-09-20T20:16:42.037+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 150,000
+[2025-09-20T20:16:42.508+0000] {bronze_processor.py:242} INFO - Processing chunk 7 with 25000 rows
+[2025-09-20T20:16:50.344+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 175,000
+[2025-09-20T20:16:50.753+0000] {bronze_processor.py:242} INFO - Processing chunk 8 with 25000 rows
+[2025-09-20T20:17:01.657+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 200,000
+[2025-09-20T20:17:02.129+0000] {bronze_processor.py:242} INFO - Processing chunk 9 with 25000 rows
+[2025-09-20T20:17:09.247+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 225,000
+[2025-09-20T20:17:09.695+0000] {bronze_processor.py:242} INFO - Processing chunk 10 with 25000 rows
+[2025-09-20T20:17:17.564+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 250,000
+[2025-09-20T20:17:17.978+0000] {bronze_processor.py:242} INFO - Processing chunk 11 with 25000 rows
+[2025-09-20T20:17:26.394+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 275,000
+[2025-09-20T20:17:26.899+0000] {bronze_processor.py:242} INFO - Processing chunk 12 with 25000 rows
+[2025-09-20T20:17:38.453+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 300,000
+[2025-09-20T20:17:38.955+0000] {bronze_processor.py:242} INFO - Processing chunk 13 with 25000 rows
+[2025-09-20T20:17:48.391+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 325,000
+[2025-09-20T20:17:48.847+0000] {bronze_processor.py:242} INFO - Processing chunk 14 with 25000 rows
+[2025-09-20T20:17:55.985+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 350,000
+[2025-09-20T20:17:56.402+0000] {bronze_processor.py:242} INFO - Processing chunk 15 with 25000 rows
+[2025-09-20T20:18:04.256+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 375,000
+[2025-09-20T20:18:04.706+0000] {bronze_processor.py:242} INFO - Processing chunk 16 with 25000 rows
+[2025-09-20T20:18:16.533+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 400,000
+[2025-09-20T20:18:17.090+0000] {bronze_processor.py:242} INFO - Processing chunk 17 with 25000 rows
+[2025-09-20T20:18:25.520+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 425,000
+[2025-09-20T20:18:26.049+0000] {bronze_processor.py:242} INFO - Processing chunk 18 with 25000 rows
+[2025-09-20T20:18:34.488+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 450,000
+[2025-09-20T20:18:34.988+0000] {bronze_processor.py:242} INFO - Processing chunk 19 with 25000 rows
+[2025-09-20T20:18:51.088+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 475,000
+[2025-09-20T20:18:51.638+0000] {bronze_processor.py:242} INFO - Processing chunk 20 with 25000 rows
+[2025-09-20T20:19:03.138+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 500,000
+[2025-09-20T20:19:03.706+0000] {bronze_processor.py:242} INFO - Processing chunk 21 with 25000 rows
+[2025-09-20T20:19:12.667+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 525,000
+[2025-09-20T20:19:13.271+0000] {bronze_processor.py:242} INFO - Processing chunk 22 with 25000 rows
+[2025-09-20T20:19:25.712+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 550,000
+[2025-09-20T20:19:26.203+0000] {bronze_processor.py:242} INFO - Processing chunk 23 with 25000 rows
+[2025-09-20T20:19:35.390+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 575,000
+[2025-09-20T20:19:35.885+0000] {bronze_processor.py:242} INFO - Processing chunk 24 with 25000 rows
+[2025-09-20T20:19:45.169+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 600,000
+[2025-09-20T20:19:45.648+0000] {bronze_processor.py:242} INFO - Processing chunk 25 with 25000 rows
+[2025-09-20T20:19:54.703+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 625,000
+[2025-09-20T20:19:55.193+0000] {bronze_processor.py:242} INFO - Processing chunk 26 with 25000 rows
+[2025-09-20T20:20:08.353+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 650,000
+[2025-09-20T20:20:08.844+0000] {bronze_processor.py:242} INFO - Processing chunk 27 with 25000 rows
+[2025-09-20T20:20:18.699+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 675,000
+[2025-09-20T20:20:19.206+0000] {bronze_processor.py:242} INFO - Processing chunk 28 with 25000 rows
+[2025-09-20T20:20:29.267+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 700,000
+[2025-09-20T20:20:29.865+0000] {bronze_processor.py:242} INFO - Processing chunk 29 with 25000 rows
+[2025-09-20T20:20:44.646+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 725,000
+[2025-09-20T20:20:45.364+0000] {bronze_processor.py:242} INFO - Processing chunk 30 with 25000 rows
+[2025-09-20T20:20:57.663+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 750,000
+[2025-09-20T20:20:58.406+0000] {bronze_processor.py:242} INFO - Processing chunk 31 with 25000 rows
+[2025-09-20T20:21:17.298+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 775,000
+[2025-09-20T20:21:18.192+0000] {bronze_processor.py:242} INFO - Processing chunk 32 with 25000 rows
+[2025-09-20T20:21:33.217+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 800,000
+[2025-09-20T20:21:34.330+0000] {bronze_processor.py:242} INFO - Processing chunk 33 with 25000 rows
+[2025-09-20T20:22:00.135+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 825,000
+[2025-09-20T20:22:00.699+0000] {bronze_processor.py:242} INFO - Processing chunk 34 with 25000 rows
+[2025-09-20T20:22:18.495+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 850,000
+[2025-09-20T20:22:19.110+0000] {bronze_processor.py:242} INFO - Processing chunk 35 with 25000 rows
+[2025-09-20T20:22:35.418+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 875,000
+[2025-09-20T20:22:36.111+0000] {bronze_processor.py:242} INFO - Processing chunk 36 with 25000 rows
+[2025-09-20T20:22:49.433+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 900,000
+[2025-09-20T20:22:50.052+0000] {bronze_processor.py:242} INFO - Processing chunk 37 with 25000 rows
+[2025-09-20T20:23:05.466+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 925,000
+[2025-09-20T20:23:05.965+0000] {bronze_processor.py:242} INFO - Processing chunk 38 with 25000 rows
+[2025-09-20T20:23:16.577+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 950,000
+[2025-09-20T20:23:17.109+0000] {bronze_processor.py:242} INFO - Processing chunk 39 with 25000 rows
+[2025-09-20T20:23:27.127+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 975,000
+[2025-09-20T20:23:27.669+0000] {bronze_processor.py:242} INFO - Processing chunk 40 with 25000 rows
+[2025-09-20T20:23:41.577+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,000,000
+[2025-09-20T20:23:42.270+0000] {bronze_processor.py:242} INFO - Processing chunk 41 with 25000 rows
+[2025-09-20T20:24:01.743+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,025,000
+[2025-09-20T20:24:02.396+0000] {bronze_processor.py:242} INFO - Processing chunk 42 with 25000 rows
+[2025-09-20T20:24:21.471+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,050,000
+[2025-09-20T20:24:22.342+0000] {bronze_processor.py:242} INFO - Processing chunk 43 with 25000 rows
+[2025-09-20T20:24:37.993+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,075,000
+[2025-09-20T20:24:38.574+0000] {bronze_processor.py:242} INFO - Processing chunk 44 with 25000 rows
+[2025-09-20T20:24:53.691+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,100,000
+[2025-09-20T20:24:54.316+0000] {bronze_processor.py:242} INFO - Processing chunk 45 with 25000 rows
+[2025-09-20T20:25:04.722+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,125,000
+[2025-09-20T20:25:05.203+0000] {bronze_processor.py:242} INFO - Processing chunk 46 with 25000 rows
+[2025-09-20T20:25:13.995+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,150,000
+[2025-09-20T20:25:14.499+0000] {bronze_processor.py:242} INFO - Processing chunk 47 with 25000 rows
+[2025-09-20T20:25:27.015+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,175,000
+[2025-09-20T20:25:27.558+0000] {bronze_processor.py:242} INFO - Processing chunk 48 with 25000 rows
+[2025-09-20T20:25:36.812+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,200,000
+[2025-09-20T20:25:37.310+0000] {bronze_processor.py:242} INFO - Processing chunk 49 with 25000 rows
+[2025-09-20T20:25:46.405+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,225,000
+[2025-09-20T20:25:46.954+0000] {bronze_processor.py:242} INFO - Processing chunk 50 with 25000 rows
+[2025-09-20T20:25:59.584+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,250,000
+[2025-09-20T20:26:00.036+0000] {bronze_processor.py:242} INFO - Processing chunk 51 with 25000 rows
+[2025-09-20T20:26:10.870+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,275,000
+[2025-09-20T20:26:11.472+0000] {bronze_processor.py:242} INFO - Processing chunk 52 with 25000 rows
+[2025-09-20T20:26:21.581+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,300,000
+[2025-09-20T20:26:22.198+0000] {bronze_processor.py:242} INFO - Processing chunk 53 with 25000 rows
+[2025-09-20T20:26:35.514+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,325,000
+[2025-09-20T20:26:36.046+0000] {bronze_processor.py:242} INFO - Processing chunk 54 with 25000 rows
+[2025-09-20T20:26:44.968+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,350,000
+[2025-09-20T20:26:45.480+0000] {bronze_processor.py:242} INFO - Processing chunk 55 with 25000 rows
+[2025-09-20T20:26:55.007+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,375,000
+[2025-09-20T20:26:55.479+0000] {bronze_processor.py:242} INFO - Processing chunk 56 with 25000 rows
+[2025-09-20T20:27:05.294+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,400,000
+[2025-09-20T20:27:05.836+0000] {bronze_processor.py:242} INFO - Processing chunk 57 with 25000 rows
+[2025-09-20T20:27:18.530+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,425,000
+[2025-09-20T20:27:18.987+0000] {bronze_processor.py:242} INFO - Processing chunk 58 with 25000 rows
+[2025-09-20T20:27:29.492+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,450,000
+[2025-09-20T20:27:29.994+0000] {bronze_processor.py:242} INFO - Processing chunk 59 with 25000 rows
+[2025-09-20T20:27:39.791+0000] {bronze_processor.py:372} INFO - Chunk loaded: 25,000 rows. Total: 1,475,000
+[2025-09-20T20:27:40.278+0000] {bronze_processor.py:242} INFO - Processing chunk 60 with 25000 rows

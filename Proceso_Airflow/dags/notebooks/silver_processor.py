@@ -34,130 +34,267 @@ class PostgreSQLManager:
     def get_engine(self):
         return create_engine(self.get_connection_string())
 
-class SilverChunkProcessor:
-    """Procesador de chunks para transformaciones Silver"""
+class VolumeAnalyzer:
+    """Analiza volumen de tablas para determinar estrategia de procesamiento"""
+    
+    CHUNK_THRESHOLD = 1000000  # 1M registros
     
     def __init__(self, postgres_manager: PostgreSQLManager):
         self.postgres_manager = postgres_manager
         self.engine = postgres_manager.get_engine()
     
     def get_table_row_count(self, table_name: str) -> int:
-        """Obtiene el número de filas de una tabla"""
+        """Obtiene conteo de filas de una tabla"""
         try:
-            query = f"SELECT COUNT(*) as count FROM {table_name}"
+            query = f"SELECT COUNT(*) as row_count FROM {table_name}"
             result = pd.read_sql(query, self.engine)
-            return int(result.iloc[0]['count'])
+            return int(result.iloc[0]['row_count'])
         except Exception as e:
             logger.warning(f"Could not get row count for {table_name}: {e}")
             return 0
     
-    def read_table_chunks(self, table_name: str, chunk_size: int = 50000) -> Iterator[pd.DataFrame]:
-        """Lee tabla en chunks para procesamiento por lotes"""
-        try:
-            query = f"SELECT * FROM {table_name}"
-            chunk_iterator = pd.read_sql(query, self.engine, chunksize=chunk_size)
+    def get_processing_strategy(self, table_name: str, row_count: int) -> Dict:
+        """Determina estrategia de procesamiento"""
+        if row_count >= self.CHUNK_THRESHOLD:
+            if row_count > 10000000:  # 10M+
+                chunk_size = 100000
+                strategy = "large_volume_chunks"
+            elif row_count > 5000000:  # 5M+
+                chunk_size = 150000
+                strategy = "medium_volume_chunks"
+            else:  # 1M-5M
+                chunk_size = 200000
+                strategy = "standard_chunks"
             
+            return {
+                "processing_mode": "chunked",
+                "chunk_size": chunk_size,
+                "strategy": strategy,
+                "requires_streaming": True
+            }
+        else:
+            return {
+                "processing_mode": "full_table",
+                "chunk_size": None,
+                "strategy": "complete_load",
+                "requires_streaming": False
+            }
+
+class ChunkedDataReader:
+    """Lector de datos por chunks desde PostgreSQL"""
+    
+    def __init__(self, postgres_manager: PostgreSQLManager):
+        self.postgres_manager = postgres_manager
+        self.engine = postgres_manager.get_engine()
+    
+    def read_table_chunks(self, table_name: str, chunk_size: int) -> Iterator[pd.DataFrame]:
+        """Lee tabla por chunks usando OFFSET/LIMIT"""
+        try:
+            offset = 0
             chunk_count = 0
-            for chunk in chunk_iterator:
+            
+            while True:
+                query = f"""
+                    SELECT * FROM {table_name} 
+                    ORDER BY load_date 
+                    LIMIT {chunk_size} OFFSET {offset}
+                """
+                
+                chunk = pd.read_sql(query, self.engine)
+                
+                if chunk.empty:
+                    break
+                
                 chunk_count += 1
-                logger.info(f"Reading chunk {chunk_count} with {len(chunk)} rows from {table_name}")
+                logger.info(f"Read chunk {chunk_count} with {len(chunk)} rows from {table_name}")
+                
                 yield chunk
+                
+                offset += chunk_size
                 gc.collect()
                 
         except Exception as e:
             logger.error(f"Error reading chunks from {table_name}: {e}")
             raise
     
-    def standardize_chunk_data_types(self, chunk: pd.DataFrame) -> pd.DataFrame:
-        """Estandariza tipos de datos en un chunk"""
+    def read_full_table(self, table_name: str) -> pd.DataFrame:
+        """Lee tabla completa para tablas pequeñas"""
         try:
-            for col in chunk.columns:
+            query = f"SELECT * FROM {table_name}"
+            df = pd.read_sql(query, self.engine)
+            logger.info(f"Read full table {table_name}: {len(df)} rows")
+            return df
+        except Exception as e:
+            logger.error(f"Error reading full table {table_name}: {e}")
+            raise
+
+class SilverDataTransformer:
+    """Transformador de datos para la capa Silver"""
+    
+    def __init__(self):
+        pass
+    
+    def standardize_data_types(self, df: pd.DataFrame, table_name: str) -> pd.DataFrame:
+        """Estandariza tipos de datos"""
+        try:
+            for col in df.columns:
                 
                 # Procesar fechas
-                if col.lower().endswith('date') and chunk[col].dtype in ['int64', 'object']:
+                if col.lower().endswith('date') and df[col].dtype in ['int64', 'object']:
                     try:
-                        if chunk[col].dtype == 'int64':
-                            # Detectar si son nanosegundos o segundos
-                            mask_ns = chunk[col] > 1000000000000
-                            chunk.loc[mask_ns, col] = pd.to_datetime(chunk.loc[mask_ns, col], unit='ns', errors='coerce')
-                            chunk.loc[~mask_ns, col] = pd.to_datetime(chunk.loc[~mask_ns, col], unit='s', errors='coerce')
+                        if df[col].dtype == 'int64':
+                            # Manejar timestamps Unix
+                            mask_ns = df[col] > 1000000000000
+                            df.loc[mask_ns, col] = pd.to_datetime(df.loc[mask_ns, col], unit='ns', errors='coerce')
+                            df.loc[~mask_ns, col] = pd.to_datetime(df.loc[~mask_ns, col], unit='s', errors='coerce')
                         else:
-                            chunk[col] = pd.to_datetime(chunk[col], errors='coerce')
-                    except:
-                        pass
+                            df[col] = pd.to_datetime(df[col], errors='coerce')
+                    except Exception as e:
+                        logger.warning(f"Could not convert {col} to datetime: {e}")
                 
                 # Procesar columna month especial
-                elif col.lower() == 'month' and chunk[col].dtype == 'int64':
+                elif col.lower() == 'month' and df[col].dtype == 'int64':
                     try:
-                        chunk[col] = pd.to_datetime(chunk[col], unit='ns', errors='coerce')
+                        df[col] = pd.to_datetime(df[col], unit='ns', errors='coerce')
                     except:
                         pass
                 
                 # Procesar dwcreateddate
-                elif col.lower() == 'dwcreateddate' and chunk[col].dtype != 'datetime64[ns]':
+                elif col.lower() == 'dwcreateddate' and df[col].dtype != 'datetime64[ns]':
                     try:
-                        chunk[col] = pd.to_datetime(chunk[col], errors='coerce')
+                        df[col] = pd.to_datetime(df[col], errors='coerce')
                     except:
                         pass
                 
                 # Procesar columnas de llaves
-                elif col.lower().endswith(('_key', 'key')) and chunk[col].dtype == 'object':
-                    chunk[col] = chunk[col].astype(str).str.strip().str.upper()
-                    chunk[col] = chunk[col].replace(['', 'NULL', 'N/A', 'UNKNOWN', 'NONE'], None)
+                elif col.lower().endswith(('_key', 'key')) and df[col].dtype == 'object':
+                    df[col] = df[col].astype(str).str.strip().str.upper()
+                    df[col] = df[col].replace(['', 'NULL', 'N/A', 'UNKNOWN', 'NONE'], None)
                 
                 # Procesar strings generales
-                elif chunk[col].dtype == 'object':
-                    chunk[col] = chunk[col].astype(str).str.strip()
-                    chunk[col] = chunk[col].replace(['', 'NULL', 'N/A', 'UNKNOWN', 'NONE', '#N/A'], None)
+                elif df[col].dtype == 'object':
+                    df[col] = df[col].astype(str).str.strip()
+                    df[col] = df[col].replace(['', 'NULL', 'N/A', 'UNKNOWN', 'NONE', '#N/A'], None)
                 
                 # Procesar valores numéricos
-                elif chunk[col].dtype in ['float64', 'float32']:
-                    chunk[col] = chunk[col].replace([np.inf, -np.inf], None)
+                elif df[col].dtype in ['float64', 'float32']:
+                    df[col] = df[col].replace([np.inf, -np.inf], None)
             
-            return chunk
+            return df
             
         except Exception as e:
-            logger.error(f"Error standardizing chunk data types: {e}")
-            return chunk
+            logger.error(f"Error standardizing data types for {table_name}: {e}")
+            return df
     
-    def apply_chunk_quality_checks(self, chunk: pd.DataFrame) -> pd.DataFrame:
-        """Aplica verificaciones de calidad en un chunk"""
+    def remove_duplicates_chunk_aware(self, df: pd.DataFrame, table_name: str, is_final_chunk: bool = False) -> pd.DataFrame:
+        """Elimina duplicados considerando que es procesamiento por chunks"""
         try:
+            initial_count = len(df)
+            
+            if 'silver_dim_' in table_name:
+                # Para dimensiones, eliminar duplicados dentro del chunk
+                cols_except_created = [c for c in df.columns if 'created' not in c.lower() and 'load_date' not in c.lower()]
+                if len(cols_except_created) > 0:
+                    df = df.drop_duplicates(subset=cols_except_created, keep='last')
+            
+            elif 'silver_fact_' in table_name:
+                # Para hechos, eliminar duplicados por columnas clave dentro del chunk
+                key_columns = []
+                for col in df.columns:
+                    if any(pattern in col.lower() for pattern in ['_key', '_number', 'customer', 'product', 'document']):
+                        key_columns.append(col)
+                
+                if key_columns:
+                    df = df.drop_duplicates(subset=key_columns, keep='last')
+                else:
+                    df = df.drop_duplicates(keep='last')
+            
+            final_count = len(df)
+            duplicates_removed = initial_count - final_count
+            
+            if duplicates_removed > 0:
+                logger.info(f"Removed {duplicates_removed} duplicates from chunk in {table_name}")
+            
+            return df
+            
+        except Exception as e:
+            logger.error(f"Error removing duplicates from {table_name}: {e}")
+            return df
+    
+    def data_quality_checks(self, df: pd.DataFrame, table_name: str) -> pd.DataFrame:
+        """Aplica verificaciones de calidad de datos"""
+        try:
+            initial_count = len(df)
+            
             # Eliminar filas completamente vacías
-            chunk_clean = chunk.dropna(how='all')
+            df_clean = df.dropna(how='all')
             
             # Filtrar fechas futuras problemáticas
             future_cutoff = pd.Timestamp.now() + pd.DateOffset(years=2)
             
-            for col in chunk_clean.select_dtypes(include=[np.datetime64]).columns:
-                if col.lower() not in ['load_date', 'silver_created_date']:
-                    problematic_mask = chunk_clean[col] > future_cutoff
+            for col in df_clean.select_dtypes(include=[np.datetime64]).columns:
+                if col.lower() != 'load_date':
+                    problematic_mask = df_clean[col] > future_cutoff
                     if problematic_mask.any():
-                        chunk_clean = chunk_clean[~problematic_mask]
+                        problematic_count = problematic_mask.sum()
+                        logger.info(f"Quarantined {problematic_count} records with future dates in {col}")
+                        df_clean = df_clean[~problematic_mask]
             
             # Filtrar valores numéricos extremos
-            for col in chunk_clean.select_dtypes(include=[np.number]).columns:
+            for col in df_clean.select_dtypes(include=[np.number]).columns:
                 if 'value' in col.lower() or 'amount' in col.lower():
-                    extreme_mask = (chunk_clean[col] > 100000000) | (chunk_clean[col] < -10000000)
+                    extreme_mask = (df_clean[col] > 100000000) | (df_clean[col] < -10000000)
                     if extreme_mask.any():
-                        chunk_clean = chunk_clean[~extreme_mask]
+                        extreme_count = extreme_mask.sum()
+                        logger.info(f"Quarantined {extreme_count} records with extreme values in {col}")
+                        df_clean = df_clean[~extreme_mask]
             
-            return chunk_clean
+            final_count = len(df_clean)
+            processed_rows = initial_count - final_count
+            
+            if processed_rows > 0:
+                logger.info(f"Quality checks processed {processed_rows} problematic rows from chunk")
+            
+            return df_clean
             
         except Exception as e:
-            logger.error(f"Error in chunk quality checks: {e}")
-            return chunk
+            logger.error(f"Error in data quality checks for {table_name}: {e}")
+            return df
     
-    def create_silver_table_structure(self, sample_chunk: pd.DataFrame, silver_table_name: str):
-        """Crea la estructura de la tabla Silver"""
+    def optimize_chunk_memory(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Optimiza memoria del chunk"""
+        try:
+            for col in df.select_dtypes(include=['object']).columns:
+                if df[col].nunique() / len(df) < 0.5:
+                    try:
+                        df[col] = df[col].astype('category')
+                    except:
+                        pass
+            
+            gc.collect()
+            return df
+            
+        except Exception as e:
+            logger.error(f"Error optimizing chunk memory: {e}")
+            return df
+
+class ChunkedSilverProcessor:
+    """Procesador Silver con capacidad de streaming por chunks"""
+    
+    def __init__(self, postgres_manager: PostgreSQLManager):
+        self.postgres_manager = postgres_manager
+        self.engine = postgres_manager.get_engine()
+        self.transformer = SilverDataTransformer()
+    
+    def create_silver_table_structure(self, sample_df: pd.DataFrame, silver_table_name: str):
+        """Crea estructura de tabla Silver con muestra"""
         try:
             # Agregar metadatos Silver
-            sample_with_metadata = sample_chunk.copy()
-            sample_with_metadata['silver_created_date'] = datetime.now()
-            sample_with_metadata['silver_execution_id'] = datetime.now().isoformat()
+            sample_df['silver_created_date'] = datetime.now()
+            sample_df['silver_execution_id'] = datetime.now().isoformat()
             
-            # Crear tabla con una fila de muestra
-            sample_with_metadata.head(1).to_sql(
+            # Crear tabla con muestra
+            sample_df.head(1).to_sql(
                 silver_table_name,
                 self.engine,
                 if_exists='replace',
@@ -165,7 +302,7 @@ class SilverChunkProcessor:
                 method='multi'
             )
             
-            # Limpiar la fila de muestra
+            # Limpiar muestra
             with self.engine.begin() as conn:
                 conn.execute(text(f'DELETE FROM "{silver_table_name}"'))
             
@@ -175,101 +312,80 @@ class SilverChunkProcessor:
             logger.error(f"Error creating Silver table structure {silver_table_name}: {e}")
             raise
     
-    def write_silver_chunk(self, processed_chunk: pd.DataFrame, silver_table_name: str) -> int:
-        """Escribe un chunk procesado a la tabla Silver"""
+    def process_chunk_to_silver(self, chunk_df: pd.DataFrame, silver_table_name: str, is_final_chunk: bool = False) -> int:
+        """Procesa un chunk individual a Silver"""
         try:
+            # Aplicar transformaciones Silver
+            processed_chunk = self.transformer.standardize_data_types(chunk_df.copy(), silver_table_name)
+            processed_chunk = self.transformer.remove_duplicates_chunk_aware(processed_chunk, silver_table_name, is_final_chunk)
+            processed_chunk = self.transformer.data_quality_checks(processed_chunk, silver_table_name)
+            processed_chunk = self.transformer.optimize_chunk_memory(processed_chunk)
+            
             # Agregar metadatos Silver
             processed_chunk['silver_created_date'] = datetime.now()
             processed_chunk['silver_execution_id'] = datetime.now().isoformat()
             
-            # Escribir chunk
+            # Guardar chunk
+            record_count = len(processed_chunk)
             processed_chunk.to_sql(
                 silver_table_name,
                 self.engine,
                 if_exists='append',
                 index=False,
                 method='multi',
-                chunksize=5000
+                chunksize=10000
             )
             
-            return len(processed_chunk)
+            # Limpiar memoria
+            del processed_chunk
+            gc.collect()
+            
+            return record_count
             
         except Exception as e:
-            logger.error(f"Error writing chunk to {silver_table_name}: {e}")
+            logger.error(f"Error processing chunk to Silver {silver_table_name}: {e}")
             raise
     
-    def process_table_streaming(self, bronze_table_name: str, chunk_size: int = 50000) -> Dict:
-        """Procesa una tabla completa por streaming chunks"""
+    def process_full_table_to_silver(self, bronze_df: pd.DataFrame, silver_table_name: str) -> int:
+        """Procesa tabla completa a Silver para tablas pequeñas"""
         try:
-            silver_table_name = bronze_table_name.replace('bronze_', 'silver_')
-            logger.info(f"Processing {bronze_table_name} -> {silver_table_name} (streaming)")
+            # Aplicar transformaciones Silver
+            processed_df = self.transformer.standardize_data_types(bronze_df.copy(), silver_table_name)
+            processed_df = self.transformer.remove_duplicates_chunk_aware(processed_df, silver_table_name, True)
+            processed_df = self.transformer.data_quality_checks(processed_df, silver_table_name)
+            processed_df = self.transformer.optimize_chunk_memory(processed_df)
             
-            row_count = self.get_table_row_count(bronze_table_name)
-            if row_count == 0:
-                logger.warning(f"Bronze table {bronze_table_name} is empty")
-                return {
-                    'bronze_table': bronze_table_name,
-                    'silver_table': silver_table_name,
-                    'record_count': 0,
-                    'status': 'empty'
-                }
+            # Agregar metadatos Silver
+            processed_df['silver_created_date'] = datetime.now()
+            processed_df['silver_execution_id'] = datetime.now().isoformat()
             
-            logger.info(f"Table {bronze_table_name} has {row_count:,} rows, processing with chunk size {chunk_size:,}")
+            # Guardar tabla completa
+            record_count = len(processed_df)
+            processed_df.to_sql(
+                silver_table_name,
+                self.engine,
+                if_exists='replace',
+                index=False,
+                method='multi',
+                chunksize=10000
+            )
             
-            total_processed = 0
-            chunk_count = 0
-            first_chunk = True
-            
-            # Procesar chunk por chunk
-            for chunk in self.read_table_chunks(bronze_table_name, chunk_size):
-                chunk_count += 1
-                
-                # Aplicar transformaciones Silver
-                processed_chunk = self.standardize_chunk_data_types(chunk)
-                processed_chunk = self.apply_chunk_quality_checks(processed_chunk)
-                
-                # Crear estructura de tabla en el primer chunk
-                if first_chunk:
-                    self.create_silver_table_structure(processed_chunk, silver_table_name)
-                    first_chunk = False
-                
-                # Escribir chunk procesado
-                if not processed_chunk.empty:
-                    records_written = self.write_silver_chunk(processed_chunk, silver_table_name)
-                    total_processed += records_written
-                    logger.info(f"Chunk {chunk_count}: processed {records_written:,} records. Total: {total_processed:,}")
-                
-                # Limpiar memoria
-                del chunk, processed_chunk
-                gc.collect()
-            
-            logger.info(f"Completed {silver_table_name}: {total_processed:,} records from {chunk_count} chunks")
-            
-            return {
-                'bronze_table': bronze_table_name,
-                'silver_table': silver_table_name,
-                'record_count': total_processed,
-                'chunks_processed': chunk_count,
-                'status': 'success',
-                'processing_time': datetime.now().isoformat()
-            }
+            logger.info(f"Full table processed to Silver: {record_count:,} records")
+            return record_count
             
         except Exception as e:
-            logger.error(f"Error in streaming processing of {bronze_table_name}: {e}")
-            return {
-                'bronze_table': bronze_table_name,
-                'silver_table': bronze_table_name.replace('bronze_', 'silver_'),
-                'record_count': 0,
-                'status': 'failed',
-                'error': str(e)
-            }
+            logger.error(f"Error processing full table to Silver {silver_table_name}: {e}")
+            raise
 
-class SilverProcessor:
-    """Procesador principal de la capa Silver con soporte para grandes volúmenes"""
+class SilverDataProcessor:
+    """Procesador principal de datos Silver"""
     
-    def __init__(self):
-        self.postgres_manager = PostgreSQLManager()
-        self.chunk_processor = SilverChunkProcessor(self.postgres_manager)
+    def __init__(self, postgres_manager: PostgreSQLManager):
+        self.postgres_manager = postgres_manager
+        self.engine = postgres_manager.get_engine()
+        self.volume_analyzer = VolumeAnalyzer(postgres_manager)
+        self.chunked_reader = ChunkedDataReader(postgres_manager)
+        self.chunked_processor = ChunkedSilverProcessor(postgres_manager)
     
     def get_bronze_tables(self) -> List[str]:
         """Obtiene lista de tablas Bronze disponibles"""
@@ -283,7 +399,7 @@ class SilverProcessor:
                 ORDER BY table_name
             """
             
-            result = pd.read_sql(query, self.postgres_manager.get_engine())
+            result = pd.read_sql(query, self.engine)
             tables = result['table_name'].tolist()
             
             logger.info(f"Found {len(tables)} Bronze tables to process")
@@ -293,63 +409,177 @@ class SilverProcessor:
             logger.error(f"Error getting Bronze tables: {e}")
             raise
     
-    def determine_chunk_size(self, table_name: str) -> int:
-        """Determina el tamaño de chunk óptimo basado en el volumen de datos"""
+    def process_bronze_to_silver(self, bronze_table_name: str) -> Dict:
+        """Procesa tabla Bronze a Silver con estrategia adaptativa"""
         try:
-            row_count = self.chunk_processor.get_table_row_count(table_name)
+            silver_table_name = bronze_table_name.replace('bronze_', 'silver_')
+            logger.info(f"Processing {bronze_table_name} -> {silver_table_name}")
             
-            if row_count > 15000000:  # >15M filas
-                return 25000
-            elif row_count > 5000000:  # >5M filas
-                return 40000
-            elif row_count > 1000000:  # >1M filas
-                return 75000
-            else:
-                return 100000
+            # Analizar volumen para determinar estrategia
+            row_count = self.volume_analyzer.get_table_row_count(bronze_table_name)
+            strategy = self.volume_analyzer.get_processing_strategy(bronze_table_name, row_count)
+            
+            logger.info(f"Volume: {row_count:,} rows, Strategy: {strategy['strategy']}")
+            
+            if row_count == 0:
+                logger.warning(f"Bronze table {bronze_table_name} is empty")
+                return {
+                    'bronze_table': bronze_table_name,
+                    'silver_table': silver_table_name,
+                    'record_count': 0,
+                    'status': 'empty',
+                    'message': 'Bronze table is empty'
+                }
+            
+            total_records = 0
+            
+            if strategy['processing_mode'] == 'full_table':
+                # Procesamiento completo para tablas pequeñas
+                bronze_df = self.chunked_reader.read_full_table(bronze_table_name)
+                total_records = self.chunked_processor.process_full_table_to_silver(bronze_df, silver_table_name)
                 
+            else:
+                # Procesamiento por chunks para tablas grandes
+                chunk_size = strategy['chunk_size']
+                logger.info(f"Processing {bronze_table_name} in chunks of {chunk_size:,} rows")
+                
+                first_chunk = True
+                chunk_count = 0
+                
+                for chunk in self.chunked_reader.read_table_chunks(bronze_table_name, chunk_size):
+                    chunk_count += 1
+                    
+                    if first_chunk:
+                        # Crear estructura con primer chunk
+                        self.chunked_processor.create_silver_table_structure(chunk.copy(), silver_table_name)
+                        first_chunk = False
+                    
+                    # Procesar chunk
+                    chunk_records = self.chunked_processor.process_chunk_to_silver(
+                        chunk, silver_table_name, False
+                    )
+                    total_records += chunk_records
+                    
+                    logger.info(f"Processed chunk {chunk_count}: {chunk_records:,} records. Total: {total_records:,}")
+            
+            # Post-procesamiento para eliminar duplicados globales en tablas grandes
+            if strategy['processing_mode'] == 'chunked' and 'dim_' in silver_table_name:
+                logger.info(f"Removing global duplicates from {silver_table_name}")
+                self.remove_global_duplicates(silver_table_name)
+            
+            result = {
+                'bronze_table': bronze_table_name,
+                'silver_table': silver_table_name,
+                'record_count': total_records,
+                'status': 'success',
+                'processing_strategy': strategy['strategy'],
+                'processing_mode': strategy['processing_mode'],
+                'processing_time': datetime.now().isoformat()
+            }
+            
+            if strategy['processing_mode'] == 'chunked':
+                result['chunks_processed'] = chunk_count
+                result['chunk_size'] = chunk_size
+            
+            logger.info(f"Successfully processed {silver_table_name}: {total_records:,} records using {strategy['strategy']}")
+            return result
+            
         except Exception as e:
-            logger.warning(f"Error determining chunk size for {table_name}: {e}")
-            return 50000  # Default
+            logger.error(f"Error processing {bronze_table_name}: {str(e)}")
+            return {
+                'bronze_table': bronze_table_name,
+                'silver_table': bronze_table_name.replace('bronze_', 'silver_'),
+                'record_count': 0,
+                'status': 'failed',
+                'error': str(e),
+                'processing_time': datetime.now().isoformat()
+            }
+    
+    def remove_global_duplicates(self, silver_table_name: str):
+        """Elimina duplicados globales después del procesamiento por chunks"""
+        try:
+            if 'dim_' in silver_table_name:
+                # Para dimensiones, usar ROW_NUMBER para eliminar duplicados
+                dedup_query = f"""
+                    DELETE FROM "{silver_table_name}" 
+                    WHERE ctid NOT IN (
+                        SELECT ctid FROM (
+                            SELECT ctid, ROW_NUMBER() OVER (
+                                PARTITION BY customer_key, product_key 
+                                ORDER BY silver_created_date DESC
+                            ) as rn
+                            FROM "{silver_table_name}"
+                        ) t WHERE t.rn = 1
+                    )
+                """
+                
+                with self.engine.begin() as conn:
+                    result = conn.execute(text(dedup_query))
+                    logger.info(f"Global deduplication completed for {silver_table_name}")
+                    
+        except Exception as e:
+            logger.warning(f"Error in global deduplication for {silver_table_name}: {e}")
+
+class SilverProcessor:
+    """Procesador principal de la capa Silver"""
+    
+    def __init__(self):
+        self.postgres_manager = PostgreSQLManager()
+        self.data_processor = SilverDataProcessor(self.postgres_manager)
     
     def execute_silver_pipeline(self, bronze_results: Dict = None) -> Dict:
-        """Ejecuta el pipeline completo de Silver con procesamiento por chunks"""
+        """Ejecuta el pipeline completo de Silver con optimización por volumen"""
         try:
-            logger.info("=" * 60)
-            logger.info("INICIANDO SILVER LAYER PIPELINE (STREAMING)")
-            logger.info("=" * 60)
+            logger.info("=" * 80)
+            logger.info("INICIANDO SILVER LAYER PIPELINE - CHUNK OPTIMIZED")
+            logger.info("=" * 80)
             
-            # Validar Bronze disponible
+            # Validar que Bronze esté disponible
             if bronze_results and bronze_results.get('successful_tables', 0) == 0:
                 raise ValueError("No hay tablas Bronze exitosas disponibles")
             
-            # Obtener tablas Bronze
-            bronze_tables = self.get_bronze_tables()
+            # Obtener lista de tablas Bronze
+            bronze_tables = self.data_processor.get_bronze_tables()
             
             if not bronze_tables:
                 raise ValueError("No se encontraron tablas Bronze para procesar")
+            
+            # Analizar volúmenes para planificación
+            large_tables = []
+            small_tables = []
+            
+            for bronze_table in bronze_tables:
+                row_count = self.data_processor.volume_analyzer.get_table_row_count(bronze_table)
+                if row_count >= VolumeAnalyzer.CHUNK_THRESHOLD:
+                    large_tables.append(bronze_table)
+                else:
+                    small_tables.append(bronze_table)
+            
+            logger.info(f"Processing plan: {len(large_tables)} large tables (chunked), {len(small_tables)} small tables (full)")
             
             results = []
             total_records = 0
             successful_tables = 0
             failed_tables = 0
+            chunked_tables = 0
+            full_load_tables = 0
             
-            # Procesar cada tabla por streaming
+            # Procesar cada tabla Bronze a Silver
             for bronze_table in bronze_tables:
                 try:
-                    # Determinar chunk size óptimo
-                    chunk_size = self.determine_chunk_size(bronze_table)
-                    
-                    # Procesar tabla completa por chunks
-                    result = self.chunk_processor.process_table_streaming(bronze_table, chunk_size)
+                    result = self.data_processor.process_bronze_to_silver(bronze_table)
                     results.append(result)
                     
                     if result['status'] == 'success':
                         successful_tables += 1
                         total_records += result['record_count']
-                        logger.info(f"✓ {result['silver_table']}: {result['record_count']:,} registros")
+                        
+                        if result.get('processing_mode') == 'chunked':
+                            chunked_tables += 1
+                        else:
+                            full_load_tables += 1
                     else:
                         failed_tables += 1
-                        logger.error(f"✗ {bronze_table}: {result.get('error', 'Unknown error')}")
                         
                 except Exception as e:
                     logger.error(f"Failed to process {bronze_table}: {e}")
@@ -369,21 +599,24 @@ class SilverProcessor:
                 'successful_tables': successful_tables,
                 'failed_tables': failed_tables,
                 'empty_tables': len([r for r in results if r['status'] == 'empty']),
+                'chunked_tables': chunked_tables,
+                'full_load_tables': full_load_tables,
                 'total_records': total_records,
                 'status': 'completed' if failed_tables == 0 else 'completed_with_errors',
                 'layer': 'silver',
-                'processing_mode': 'streaming_chunks',
+                'volume_optimization': True,
                 'results': results
             }
             
-            logger.info("=" * 60)
+            logger.info("=" * 80)
             logger.info("SILVER LAYER RESUMEN:")
             logger.info(f"  Tablas exitosas: {successful_tables}")
             logger.info(f"  Tablas fallidas: {failed_tables}")
+            logger.info(f"  Procesamiento chunked: {chunked_tables}")
+            logger.info(f"  Carga completa: {full_load_tables}")
             logger.info(f"  Total registros: {total_records:,}")
-            logger.info(f"  Modo: Streaming por chunks")
             logger.info(f"  Status: {pipeline_result['status']}")
-            logger.info("=" * 60)
+            logger.info("=" * 80)
             
             return pipeline_result
             

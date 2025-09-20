@@ -69,6 +69,42 @@ class PostgreSQLManager:
     def get_engine(self):
         return create_engine(self.get_connection_string())
 
+class VolumeAwareProcessor:
+    """Determina estrategia de procesamiento basada en volumen de datos"""
+    
+    CHUNK_THRESHOLD = 1000000  # 1M registros
+    LARGE_TABLE_CHUNK_SIZE = 50000
+    MEDIUM_TABLE_CHUNK_SIZE = 100000
+    SMALL_TABLE_FULL_LOAD = True
+    
+    @classmethod
+    def get_processing_strategy(cls, row_count: int) -> Dict:
+        """Determina estrategia de procesamiento según volumen"""
+        if row_count >= cls.CHUNK_THRESHOLD:
+            if row_count > 10000000:  # 10M+
+                chunk_size = 25000
+                strategy = "large_chunks"
+            elif row_count > 5000000:  # 5M+
+                chunk_size = 35000
+                strategy = "medium_chunks"
+            else:  # 1M-5M
+                chunk_size = cls.LARGE_TABLE_CHUNK_SIZE
+                strategy = "standard_chunks"
+            
+            return {
+                "processing_mode": "streaming",
+                "chunk_size": chunk_size,
+                "strategy": strategy,
+                "memory_optimization": True
+            }
+        else:
+            return {
+                "processing_mode": "full_load",
+                "chunk_size": None,
+                "strategy": "complete_table",
+                "memory_optimization": False
+            }
+
 class ColumnNameCleaner:
     FORBIDDEN_CHARS = r"[ ,;{}\(\)\n\t=]+"
     RESERVED_WORDS = {
@@ -149,7 +185,7 @@ class DataProfiler:
             logger.warning(f"Could not get row count for {schema}.{table}: {e}")
             return 0
 
-class MemoryEfficientDataExtractor:
+class OptimizedDataExtractor:
     def __init__(self, source_manager: SourceConnectionManager):
         self.source_manager = source_manager
     
@@ -177,7 +213,23 @@ class MemoryEfficientDataExtractor:
         
         return df
     
-    def extract_table_streaming(self, schema: str, table: str, chunk_size: int = 25000) -> Iterator[pd.DataFrame]:
+    def extract_full_table(self, schema: str, table: str) -> pd.DataFrame:
+        """Extrae tabla completa para tablas pequeñas"""
+        query = f"SELECT * FROM [{schema}].[{table}]"
+        
+        try:
+            engine = self.source_manager.get_engine()
+            df = pd.read_sql(query, engine)
+            df = self.optimize_dtypes(df)
+            logger.info(f"Full load completed: {len(df)} rows")
+            return df
+                
+        except Exception as e:
+            logger.error(f"Error extracting full table {schema}.{table}: {e}")
+            raise
+    
+    def extract_table_streaming(self, schema: str, table: str, chunk_size: int) -> Iterator[pd.DataFrame]:
+        """Extrae tabla por chunks para tablas grandes"""
         query = f"SELECT * FROM [{schema}].[{table}]"
         
         try:
@@ -195,10 +247,10 @@ class MemoryEfficientDataExtractor:
                 gc.collect()
                 
         except Exception as e:
-            logger.error(f"Error extracting data from {schema}.{table}: {e}")
+            logger.error(f"Error extracting streaming data from {schema}.{table}: {e}")
             raise
 
-class StreamingDataLoader:
+class AdaptiveDataLoader:
     def __init__(self, postgres_manager: PostgreSQLManager):
         self.postgres_manager = postgres_manager
         self.cleaner = ColumnNameCleaner()
@@ -212,18 +264,47 @@ class StreamingDataLoader:
     def safe_table_name(self, table_name: str) -> str:
         return f'"{table_name}"' if not table_name.startswith('"') else table_name
 
-    def create_table_if_not_exists(self, df_sample: pd.DataFrame, table_name: str):
+    def prepare_dataframe(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Prepara DataFrame con metadatos estándar"""
+        column_mapping = {col: self.cleaner.clean_identifier(col) for col in df.columns}
+        df_clean = df.rename(columns=column_mapping)
+        
+        lower_cols = [c.lower() for c in df_clean.columns]
+        if 'load_date' not in lower_cols:
+            df_clean['load_date'] = datetime.now()
+        if 'source_system' not in lower_cols:
+            df_clean['source_system'] = 'spaceparts'
+        
+        return df_clean, column_mapping
+
+    def load_full_table(self, df: pd.DataFrame, table_name: str) -> int:
+        """Carga tabla completa para volúmenes pequeños"""
         try:
             engine = self.get_engine()
+            df_clean, _ = self.prepare_dataframe(df)
             
-            column_mapping = {col: self.cleaner.clean_identifier(col) for col in df_sample.columns}
-            df_clean = df_sample.rename(columns=column_mapping)
+            df_clean.to_sql(
+                name=table_name,
+                con=engine,
+                schema=None,
+                if_exists='replace',
+                index=False,
+                method='multi',
+                chunksize=10000
+            )
             
-            lower_cols = [c.lower() for c in df_clean.columns]
-            if 'load_date' not in lower_cols:
-                df_clean['load_date'] = datetime.now()
-            if 'source_system' not in lower_cols:
-                df_clean['source_system'] = 'spaceparts'
+            logger.info(f"Full load completed: {len(df_clean):,} rows to {table_name}")
+            return len(df_clean)
+            
+        except Exception as e:
+            logger.error(f"Error in full load to {table_name}: {e}")
+            raise
+
+    def create_table_structure(self, df_sample: pd.DataFrame, table_name: str):
+        """Crea estructura de tabla con muestra"""
+        try:
+            engine = self.get_engine()
+            df_clean, column_mapping = self.prepare_dataframe(df_sample)
             
             df_clean.head(1).to_sql(
                 name=table_name,
@@ -238,7 +319,7 @@ class StreamingDataLoader:
                 safe_name = self.safe_table_name(table_name)
                 conn.execute(text(f"DELETE FROM {safe_name}"))
             
-            logger.info(f"Table {table_name} created successfully")
+            logger.info(f"Table structure created: {table_name}")
             return column_mapping
             
         except Exception as e:
@@ -246,9 +327,9 @@ class StreamingDataLoader:
             raise
 
     def load_chunk(self, df_chunk: pd.DataFrame, table_name: str, column_mapping: dict) -> int:
+        """Carga un chunk individual"""
         try:
             engine = self.get_engine()
-            
             df_clean = df_chunk.rename(columns=column_mapping)
             
             lower_cols = [c.lower() for c in df_clean.columns]
@@ -273,7 +354,8 @@ class StreamingDataLoader:
             logger.error(f"Error loading chunk to {table_name}: {e}")
             raise
 
-    def load_data_streaming(self, data_iterator: Iterator[pd.DataFrame], table_name: str) -> int:
+    def load_streaming_data(self, data_iterator: Iterator[pd.DataFrame], table_name: str) -> int:
+        """Carga datos por streaming"""
         total_records = 0
         column_mapping = None
         first_chunk = True
@@ -281,18 +363,18 @@ class StreamingDataLoader:
         try:
             for chunk in data_iterator:
                 if first_chunk:
-                    column_mapping = self.create_table_if_not_exists(chunk, table_name)
+                    column_mapping = self.create_table_structure(chunk, table_name)
                     first_chunk = False
                 
                 records_loaded = self.load_chunk(chunk, table_name, column_mapping)
                 total_records += records_loaded
                 
-                logger.info(f"Loaded chunk: {records_loaded:,} rows. Total: {total_records:,}")
+                logger.info(f"Chunk loaded: {records_loaded:,} rows. Total: {total_records:,}")
                 
                 del chunk
                 gc.collect()
             
-            logger.info(f"Completed loading {total_records:,} total rows to {table_name}")
+            logger.info(f"Streaming completed: {total_records:,} rows to {table_name}")
             return total_records
             
         except Exception as e:
@@ -300,15 +382,16 @@ class StreamingDataLoader:
             raise
 
 class BronzeProcessor:
-    """Procesador principal de la capa Bronze"""
+    """Procesador principal Bronze con optimización por volumen"""
     
     def __init__(self):
         self.source_manager = SourceConnectionManager()
         self.postgres_manager = PostgreSQLManager()
         self.profiler = DataProfiler(self.source_manager)
-        self.extractor = MemoryEfficientDataExtractor(self.source_manager)
-        self.loader = StreamingDataLoader(self.postgres_manager)
+        self.extractor = OptimizedDataExtractor(self.source_manager)
+        self.loader = AdaptiveDataLoader(self.postgres_manager)
         self.cleaner = ColumnNameCleaner()
+        self.volume_processor = VolumeAwareProcessor()
     
     def get_table_list(self) -> List[str]:
         """Obtiene lista de tablas a procesar"""
@@ -321,12 +404,11 @@ class BronzeProcessor:
             raise
     
     def process_single_table(self, table_name: str) -> Dict:
-        """Procesa una sola tabla"""
+        """Procesa una tabla con estrategia adaptativa"""
         try:
             logger.info(f"Starting Bronze extraction for table: {table_name}")
             
             schema, table = table_name.split('.', 1)
-            
             row_count = self.profiler.get_row_count(schema, table)
             logger.info(f"Table {table_name} has {row_count:,} rows")
             
@@ -340,33 +422,40 @@ class BronzeProcessor:
                     'message': 'Empty table'
                 }
             
-            # Determinar chunk size dinámico
-            if row_count > 10000000:
-                chunk_size = 15000
-            elif row_count > 1000000:
-                chunk_size = 25000
-            else:
-                chunk_size = 50000
-            
-            logger.info(f"Using chunk size: {chunk_size:,} for {row_count:,} rows")
-            
+            # Determinar estrategia de procesamiento
+            strategy = self.volume_processor.get_processing_strategy(row_count)
             bronze_table_name = self.cleaner.clean_table_name(schema, table)
             
-            # Extraer y cargar con streaming
-            logger.info(f"Starting streaming extraction and load for {table_name}")
-            data_iterator = self.extractor.extract_table_streaming(schema, table, chunk_size=chunk_size)
-            records_loaded = self.loader.load_data_streaming(data_iterator, bronze_table_name)
+            logger.info(f"Processing strategy: {strategy['strategy']} (mode: {strategy['processing_mode']})")
+            
+            # Ejecutar según estrategia
+            if strategy['processing_mode'] == 'full_load':
+                # Tablas pequeñas: carga completa
+                df = self.extractor.extract_full_table(schema, table)
+                records_loaded = self.loader.load_full_table(df, bronze_table_name)
+                
+            else:
+                # Tablas grandes: streaming por chunks
+                chunk_size = strategy['chunk_size']
+                logger.info(f"Using streaming with chunk size: {chunk_size:,}")
+                
+                data_iterator = self.extractor.extract_table_streaming(schema, table, chunk_size)
+                records_loaded = self.loader.load_streaming_data(data_iterator, bronze_table_name)
             
             result = {
                 'source_table': table_name,
                 'bronze_table': bronze_table_name,
                 'record_count': records_loaded,
                 'status': 'success',
-                'extraction_time': datetime.now().isoformat(),
-                'chunk_size_used': chunk_size
+                'processing_strategy': strategy['strategy'],
+                'processing_mode': strategy['processing_mode'],
+                'extraction_time': datetime.now().isoformat()
             }
             
-            logger.info(f"Successfully loaded {records_loaded:,} records to {bronze_table_name}")
+            if strategy['processing_mode'] == 'streaming':
+                result['chunk_size_used'] = strategy['chunk_size']
+            
+            logger.info(f"Successfully processed {table_name}: {records_loaded:,} records using {strategy['strategy']}")
             return result
             
         except Exception as e:
@@ -382,19 +471,34 @@ class BronzeProcessor:
             }
     
     def execute_bronze_pipeline(self) -> Dict:
-        """Ejecuta el pipeline completo de Bronze"""
+        """Ejecuta pipeline Bronze con optimización automática"""
         try:
-            logger.info("=" * 60)
-            logger.info("INICIANDO BRONZE LAYER PIPELINE")
-            logger.info("=" * 60)
+            logger.info("=" * 80)
+            logger.info("INICIANDO BRONZE LAYER PIPELINE - VOLUME OPTIMIZED")
+            logger.info("=" * 80)
             
-            # Obtener lista de tablas
             table_list = self.get_table_list()
+            
+            # Clasificar tablas por volumen para estadísticas
+            large_tables = []
+            small_tables = []
+            
+            for table_name in table_list:
+                schema, table = table_name.split('.', 1)
+                row_count = self.profiler.get_row_count(schema, table)
+                if row_count >= VolumeAwareProcessor.CHUNK_THRESHOLD:
+                    large_tables.append(table_name)
+                else:
+                    small_tables.append(table_name)
+            
+            logger.info(f"Processing plan: {len(large_tables)} large tables (streaming), {len(small_tables)} small tables (full load)")
             
             results = []
             total_records = 0
             successful_tables = 0
             failed_tables = 0
+            streaming_tables = 0
+            full_load_tables = 0
             
             # Procesar cada tabla
             for table_name in table_list:
@@ -405,6 +509,11 @@ class BronzeProcessor:
                     if result['status'] == 'success':
                         successful_tables += 1
                         total_records += result['record_count']
+                        
+                        if result.get('processing_mode') == 'streaming':
+                            streaming_tables += 1
+                        else:
+                            full_load_tables += 1
                     else:
                         failed_tables += 1
                         
@@ -426,19 +535,24 @@ class BronzeProcessor:
                 'successful_tables': successful_tables,
                 'failed_tables': failed_tables,
                 'skipped_tables': len([r for r in results if r['status'] == 'skipped']),
+                'streaming_tables': streaming_tables,
+                'full_load_tables': full_load_tables,
                 'total_records': total_records,
                 'status': 'completed' if failed_tables == 0 else 'completed_with_errors',
                 'layer': 'bronze',
+                'volume_optimization': True,
                 'results': results
             }
             
-            logger.info("=" * 60)
+            logger.info("=" * 80)
             logger.info("BRONZE LAYER RESUMEN:")
             logger.info(f"  Tablas exitosas: {successful_tables}")
             logger.info(f"  Tablas fallidas: {failed_tables}")
+            logger.info(f"  Procesamiento streaming: {streaming_tables}")
+            logger.info(f"  Carga completa: {full_load_tables}")
             logger.info(f"  Total registros: {total_records:,}")
             logger.info(f"  Status: {pipeline_result['status']}")
-            logger.info("=" * 60)
+            logger.info("=" * 80)
             
             return pipeline_result
             
